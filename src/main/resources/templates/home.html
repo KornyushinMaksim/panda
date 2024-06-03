@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" media="all" href="/static/style.css" th:href="@{/style.css}"/>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="headerInner">
+            <a href="/">
+                <div class="logo">
+                    <img src="/images/logo_panda.jpeg">
+                </div>
+            </a>
+            <div class="headerMenu">
+                <div>
+                    <a href="../fileStorage">Заявки</a>
+                </div>
+                <div>
+                    <a href="../contacts">Проектная команда</a>
+                </div>
+                <div>Клиенты</div>
+                <div>Мои заявки</div>
+            </div>
+            <div class="search-profile">
+                <div class="headerSearch">
+                    <input type="text" placeholder="Искать">
+                    <button class="search">Поиск</button>
+                </div>
+                <div class="headerProfile">
+                    <select name="" id="">
+                        <option value="profile">Профиль</option>
+                        <option value="login">Войти</option>
+                        <option value="">3</option>
+                        <option value="exit">Выйти</option>
+                    </select>
+                    <img src="/images/logo_profile.png">
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Body -->
+    <div class="containerBody">
+        <div class="table">
+            <table>
+                <thead>
+                <tr>
+                    <th width="10%">№</th>
+                    <th width="15%">Имя</th>
+                    <th width="7%">Тип</th>
+                    <th width="10%">Дата</th>
+                    <th width="10%">Размер</th>
+                    <th width="15%">Автор</th>
+                    <th width="auto">Примечание</th>
+                </tr>
+                </thead>
+                <tbody th:each="el : ${fileStorage}">
+                <tr>
+                    <td th:text="${el.id}"></td>
+                    <td>
+                        <a th:href="'propertiesFile/' + ${el.id}">
+                            <div th:text="${el.name}"></div>
+                        </a>
+                    </td>
+                    <td th:text="${el.typeFile}"></td>
+                    <td th:text="${el.date}"></td>
+                    <td th:text="${el.size}"></td>
+                    <td>
+                        <a th:href="profileStuff" th:text="${el.author}"></a>
+                    </td>
+                    <td th:text="${el.info}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <button onclick="toggleVisibility()">Добавить</button>
+        </div>
+
+        <div id="docAdd" style="display: none;">
+            <h3>Добавление файла</h3>
+            <div class="containerDocAdd">
+                <form action="" method="post">
+                    <input type="file" name="name" placeholder="Название"><br>
+                    <input type="text" name="author" placeholder="Автор"><br>
+                    <textarea name="info" id="" cols="30" rows="10" placeholder="Описание"></textarea>
+                    <div class="bottons">
+                        <button onclick="toggleVisibility()" type="submit" name="select" value="add">Добавить</button>
+                        <button onclick="toggleVisibility()" type="submit" name="select" value="close">Закрыть</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<script src="script.js"></script>
+</body>
+</html>

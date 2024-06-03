@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" media="all" href="/static/style.css" th:href="@{/style.css}">
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="headerInner">
+            <a href="/">
+                <div class="logo">
+                    <img src="/images/logo_panda.jpeg">
+                </div>
+            </a>
+<!--            <div class="headerMenu">-->
+<!--                <div>-->
+<!--                    <a href="../fileStorage">Заявки</a>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <a href="../contacts">Проектная команда</a>-->
+<!--                </div>-->
+<!--                <div>Клиенты</div>-->
+<!--                <div>Мои заявки</div>-->
+<!--            </div>-->
+<!--            <div class="search-profile">-->
+<!--                <div class="headerSearch">-->
+<!--                    <input type="text" placeholder="Искать">-->
+<!--                    <button class="search">Поиск</button>-->
+<!--                </div>-->
+<!--                <div class="headerProfile">-->
+<!--                    <select name="" id="">-->
+<!--                        <option value="profile">Профиль</option>-->
+<!--                        <option value="login">Войти</option>-->
+<!--                        <option value="">3</option>-->
+<!--                        <option value="exit">Выйти</option>-->
+<!--                    </select>-->
+<!--                    <img src="/static/images/logo_profile.png" alt="logo">-->
+<!--                </div>-->
+<!--            </div>-->
+        </div>
+    </div>
+
+<!--    <header th:insert=("~{blocks/header::header}")></header>-->
+    <!-- Body -->
+    <div class="containerBody">
+        <div class="login">
+            <form th:action="@{/home}" method="post">
+                <h1>Войти</h1><br>
+                <input type="text" name="email" placeholder="Логин"><br>
+                <input type="password" name="passwd" placeholder="Пароль"><br>
+                <button type="submit">
+                    <!-- <a href="/home"> -->
+                        Войти
+                    <!-- </a> -->
+                </button>
+                <a th:href="/home">Зарегистрироваться</a><br>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
