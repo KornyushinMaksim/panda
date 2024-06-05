@@ -60,10 +60,10 @@ public class EmployeeService {
      */
     @Transactional
     public EmployeeDto updateEmployee(EmployeeDto employeeDto) {
-        System.out.println();
-        Employee employee = employeeMapper.toEntity(getEmployeeById(employeeDto.getId()));
+
+        Employee employee = employeeRepository.findById(employeeDto.getId()).orElseThrow();
         Employee employeeSaved = employeeRepository.save(employeeMapper.merge(employeeDto, employee));
-        System.out.println();
+
         return employeeMapper.toDto(employeeSaved);
     }
 

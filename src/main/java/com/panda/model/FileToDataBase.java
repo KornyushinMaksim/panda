@@ -36,7 +36,7 @@ public class FileToDataBase {
 
     @OneToOne
     @JoinColumn(name = "employee_id")
-    private Employee employee;
+    private Employee employee;  //записываем id_employee кто взял в работу
 
     @Column(name = "path_to_storage")
     private String pathToStorage;
