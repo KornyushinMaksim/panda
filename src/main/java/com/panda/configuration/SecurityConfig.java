@@ -39,11 +39,14 @@ public class SecurityConfig {
             Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 
             if (roles.contains("ROLE_ADM")) {
-                response.sendRedirect("/home");
+                response.sendRedirect("/admin"); //доступ к странице админа для админов
+                return;
+            } else if (roles.contains("ROLE_USR")) {
+                response.sendRedirect("/user");   //доступ к странице юзера для юзеров
                 return;
             }
 
-            response.sendRedirect("/hello");
+            response.sendRedirect("/denied");
         };
     }
 
@@ -74,12 +77,11 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/home").hasRole("USR")
-                        .requestMatchers("/login").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/user").hasRole("USR")
+                        .anyRequest().permitAll()
                 )
-//                .formLogin((form) -> form
-//                        .loginPage("/login")
+//                .formLogin(form -> form
+//                        .loginPage("/my-login")
 //                        .permitAll()
 //                )
                 .formLogin( AbstractAuthenticationFilterConfigurer::permitAll)

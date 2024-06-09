@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -78,6 +79,13 @@ public class EmployeeService {
 
     public Optional<Employee> findEmployeeByAuthenticationLogin(String username) {
         return employeeRepository.findEmployeeByAuthenticationLogin(username);
+    }
+
+    public Set<Employee> getEmployees(List<UUID> employeeIds) {
+        return employeeIds.stream()
+                .map(employeeRepository::findById)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
     }
 
 //    public Optional<Employee> findEmployeeByAuthenticationUsername(String username) {

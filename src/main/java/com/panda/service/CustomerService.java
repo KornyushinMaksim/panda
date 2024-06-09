@@ -41,4 +41,9 @@ public class CustomerService {
         Customer customerDelete = customerRepository.findById(customerId).orElseThrow();
         customerRepository.delete(customerDelete);
     }
+
+    public Customer getCustomerById(UUID customerId) {
+
+        return customerRepository.findById(customerId).orElseThrow();
+    }
 }

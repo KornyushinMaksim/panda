@@ -1,6 +1,8 @@
 package com.panda.service;
 
+import com.panda.dto.FileToDataBaseDto;
 import com.panda.mapper.EmployeeMapper;import com.panda.mapper.FileToDataBaseMapper;
+import com.panda.model.FileTask;
 import com.panda.model.FileToDataBase;
 import com.panda.repository.FileToDataBaseRepository;
 import com.panda.mapper.EmployeeMapper;
@@ -15,7 +17,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Base64;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -98,9 +102,11 @@ public class FileToDataBaseService {
      * @param id
      * @return
      */
-    public FileToDataBase getFileById(UUID id) {
+    public FileToDataBaseDto getFileById(UUID id) {
 
-        return fileToDataBaseRepository.findById(id).orElseThrow();
+        FileToDataBase fileToDataBase = fileToDataBaseRepository.findById(id).orElseThrow();
+
+        return fileToDataBaseMapper.toDto(fileToDataBase);
     }
 
     /**
@@ -185,7 +191,8 @@ public class FileToDataBaseService {
      */
     public byte[] updateFile(UUID fileId, UUID employeeId) {
 
-        FileToDataBase fileToDataBase = getFileById(fileId);
+        FileToDataBaseDto fileToDataBaseDto = getFileById(fileId);
+        FileToDataBase fileToDataBase = fileToDataBaseMapper.toEntity(fileToDataBaseDto);
 
         fileToDataBase.setIsActive(true);
         fileToDataBase.setEmployee(employeeMapper.toEntity(employeeService.getEmployeeById(employeeId)));
@@ -223,6 +230,7 @@ public class FileToDataBaseService {
      * @param multipartFile
      */
     private void writeToFile (String path, MultipartFile multipartFile) {
+
         try (FileOutputStream fos = new FileOutputStream(path)) {
             byte[] contentFile = multipartFile.getBytes();
             fos.write(contentFile);
@@ -230,5 +238,18 @@ public class FileToDataBaseService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * возвращает список файлов
+     * @return
+     */
+    public List<FileToDataBaseDto> getAllFiles() {
+
+        List<FileToDataBaseDto> filesDto = fileToDataBaseRepository.findAll().stream()
+                .map(fileToDataBaseMapper::toDto)
+                .collect(Collectors.toList());
+
+        return filesDto;
     }
 }

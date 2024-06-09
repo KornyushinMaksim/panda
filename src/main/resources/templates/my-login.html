@@ -49,7 +49,7 @@
     <!-- Body -->
     <div class="containerBody">
         <div class="login">
-            <form th:action="@{/home}" method="post">
+            <form th:action="@{/my-login}" method="post">
                 <h1>Войти</h1><br>
                 <input type="text" name="email" placeholder="Логин"><br>
                 <input type="password" name="passwd" placeholder="Пароль"><br>
@@ -58,7 +58,7 @@
                         Войти
                     <!-- </a> -->
                 </button>
-                <a th:href="/home">Зарегистрироваться</a><br>
+                <a th:href="/user">Зарегистрироваться</a><br>
             </form>
         </div>
     </div>

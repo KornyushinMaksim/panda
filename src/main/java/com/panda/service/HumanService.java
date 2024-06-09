@@ -111,8 +111,6 @@ public class HumanService {
                 .map(humanMapper::toDto)
                 .collect(Collectors.toList());
 
-        System.out.println();
-
         return humanDtos;
     }
 

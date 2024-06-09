@@ -21,11 +21,11 @@ public class FileTaskDto {
 
     private UUID id;
 
-    private FileToDataBase fileId;
+    private FileToDataBaseDto fileId;
 
-    private Customer customerId;
+    private CustomerDto customerId;
 
-    private Set<Employee> executors;
+    private Set<EmployeeDto> executors;
 
     private LocalDate deadLine;
 

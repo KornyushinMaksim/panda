@@ -29,7 +29,7 @@ public class FileTask {
 
     @ManyToMany
     @JoinTable(name = "file_employee_relation",
-                joinColumns = @JoinColumn(name = "file_id"),
+                joinColumns = @JoinColumn(name = "file_task_id"),
                 inverseJoinColumns = @JoinColumn(name = "employee_id"))
     private Set<Employee> executors;
 
