@@ -2,8 +2,10 @@ package com.panda.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.yaml.snakeyaml.tokens.CommentToken;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -35,4 +37,11 @@ public class FileTask {
 
     @Column(name = "dead_line")
     private LocalDate deadLine;
+
+    @OneToOne
+    @JoinColumn(name = "author_task")
+    private Employee authorTask;
+
+//    @OneToMany(mappedBy = "fileTaskId")
+//    private List<Comment> comments;
 }

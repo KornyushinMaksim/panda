@@ -23,6 +23,8 @@ public class FileTaskDto {
 
     private FileToDataBaseDto fileId;
 
+    private EmployeeDto authorTask;
+
     private CustomerDto customerId;
 
     private Set<EmployeeDto> executors;

@@ -1,23 +1,17 @@
 package com.panda.service;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.panda.dto.CustomerDto;
 import com.panda.dto.EmployeeDto;
 import com.panda.dto.FileTaskDto;
 import com.panda.dto.FileToDataBaseDto;
 import com.panda.mapper.EmployeeMapper;
 import com.panda.mapper.FileTaskMapper;
-import com.panda.model.Customer;
 import com.panda.model.Employee;
 import com.panda.model.FileTask;
-import com.panda.model.FileToDataBase;
 import com.panda.repository.FileTaskRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,49 +26,13 @@ public class FileTaskService {
     private final CustomerService customerService;
     private final EmployeeService employeeService;
 
-//    /**
-//     * создание новой задачи
-//     * @param fileTaskDto
-//     * @return
-//     */
-//    @Transactional
-//    public FileTaskDto addFileTask(Map<String, Object> fileTask) {
-//
-//        Map<String, Object> executors = (Map<String, Object>) fileTask.get("executors");
-//        Set<Employee> employees = new HashSet<>();
-//
-//        for(Map.Entry entry: executors.entrySet()) {
-//            UUID tmp = UUID.fromString((String) entry.getValue());
-//            Employee employeeTmp = employeeMapper.toEntity
-//                    (employeeService.getEmployeeById
-//                            (tmp));
-//
-//            employees.add(employeeTmp);
-//        }
-//
-//        UUID fileId = UUID.fromString((String) fileTask.get("fileId"));
-//        FileToDataBase fileToDataBase = fileToDataBaseService.getFileById(fileId);
-//
-//        UUID customerId = UUID.fromString((String) fileTask.get("customerId"));
-//        Customer customer = customerService.getCustomerById(customerId);
-//
-//        LocalDate localDate = LocalDate.parse((String) fileTask.get("deadLine"));
-//
-//        FileTask fileTaskSaved = FileTask.builder()
-//                .fileId(fileToDataBase)
-//                .customerId(customer)
-//                .deadLine(localDate)
-//                .executors(employees)
-//                .build();
-//
-//        fileTaskRepository.save(fileTaskSaved);
-//
-//        FileTaskDto fileTaskDto = fileTaskMapper.toDto(fileTaskSaved);
-//        fileTaskDto.setExecutors(employees);
-//
-//        return fileTaskDto;
-//    }
-
+    /**
+     * добавляет новую задачу и назначает сотрудников,
+     * которые ее будут выполнять
+     * @param fileTaskDto
+     * @return
+     */
+    @Transactional
     public FileTaskDto addFileTask(FileTaskDto fileTaskDto) {
 
         List<UUID> employeeIds = fileTaskDto.getExecutors().stream()
@@ -83,7 +41,7 @@ public class FileTaskService {
         Set<Employee> employees = employeeService.getEmployees(employeeIds);
 
         FileTask entity = fileTaskMapper.toEntity(fileTaskDto);
-        entity.setExecutors(employees);
+//        entity.setExecutors(employees);
 
         FileTask fileTaskSaved = fileTaskRepository.save(entity);
 
@@ -96,7 +54,7 @@ public class FileTaskService {
     }
 
     /**
-     * изменение задачи
+     * изменение задачи                 //???
      * @param fileTaskDto
      * @return
      */
@@ -109,5 +67,21 @@ public class FileTaskService {
         fileTaskRepository.save(fileTaskSaved);
 
         return fileTaskMapper.toDto(fileTaskSaved);
+    }
+
+    public List<FileTaskDto> getAllTasks() {
+
+        List<FileTaskDto> fileTasksDto = fileTaskRepository.findAll().stream()
+                .map(fileTaskMapper::toDto)
+                .toList();
+
+        return fileTasksDto;
+    }
+
+    public FileTaskDto getFileTaskById(UUID fileTaskId) {
+
+        FileTask fileTask = fileTaskRepository.findById(fileTaskId).orElseThrow();
+
+        return fileTaskMapper.toDto(fileTask);
     }
 }
