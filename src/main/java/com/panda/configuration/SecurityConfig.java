@@ -77,14 +77,17 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/", "/login").permitAll()
+                        .requestMatchers("/admin").hasRole("ADM")
                         .requestMatchers("/user").hasRole("USR")
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
-//                .formLogin(form -> form
-//                        .loginPage("/my-login")
-//                        .permitAll()
-//                )
-                .formLogin( AbstractAuthenticationFilterConfigurer::permitAll)
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/login")
+                        .successHandler(successHandler())
+                        .permitAll()
+                )
+//                .formLogin( AbstractAuthenticationFilterConfigurer::permitAll)
                 .userDetailsService(userDetailsService)
                 .exceptionHandling(exception ->
                         exception.accessDeniedHandler(deniedHandler()))
