@@ -38,7 +38,7 @@ public class FileTask {
     @Column(name = "dead_line")
     private LocalDate deadLine;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_task")
     private Employee authorTask;
 

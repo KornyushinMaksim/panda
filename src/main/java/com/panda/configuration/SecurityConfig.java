@@ -79,13 +79,13 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/", "/login").permitAll()
+                        .requestMatchers("/", "/lo").permitAll()
                         .requestMatchers("/admin").hasRole("ADM")
                         .requestMatchers("/user").hasRole("USR")
                         .anyRequest().authenticated()
                 )
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
+                .formLogin(securityFormLoginConfigurer -> securityFormLoginConfigurer
+                        .loginPage("/lo")
                         .successHandler(successHandler())
                         .permitAll()
                 )
