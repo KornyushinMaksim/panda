@@ -82,7 +82,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/lo").permitAll()
                         .requestMatchers("/admin").hasRole("ADM")
                         .requestMatchers("/user").hasRole("USR")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .formLogin(securityFormLoginConfigurer -> securityFormLoginConfigurer
                         .loginPage("/lo")
