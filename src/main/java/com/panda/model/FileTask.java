@@ -21,6 +21,9 @@ public class FileTask {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @Column(name = "name_task")
+    private String nameTask;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "file_id")
     private FileToDataBase fileId;
@@ -42,6 +45,6 @@ public class FileTask {
     @JoinColumn(name = "author_task")
     private Employee authorTask;
 
-//    @OneToMany(mappedBy = "fileTaskId")
-//    private List<Comment> comments;
+//   @OneToMany(mappedBy = "fileTaskId")
+//   private List<Comment> comments;
 }

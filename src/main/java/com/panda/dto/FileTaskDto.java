@@ -21,6 +21,8 @@ public class FileTaskDto {
 
     private UUID id;
 
+    private String nameTask;
+
     private FileToDataBaseDto fileId;
 
     private EmployeeDto authorTask;
@@ -30,5 +32,4 @@ public class FileTaskDto {
     private Set<EmployeeDto> executors;
 
     private LocalDate deadLine;
-
 }

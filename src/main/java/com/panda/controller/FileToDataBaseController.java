@@ -2,6 +2,7 @@ package com.panda.controller;
 
 import com.panda.dto.FileToDataBaseDto;
 import com.panda.service.FileToDataBaseService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,9 +18,10 @@ public class FileToDataBaseController {
 
     private final FileToDataBaseService fileToDataBaseService;
 
-    @PostMapping("/add-file{nameFile}")
-    public void addFile(@RequestParam String nameFile) throws IOException {
-        fileToDataBaseService.addNewFile(nameFile);
+    @PostMapping("/add-file")
+    public void addFile(@RequestParam String nameFile,
+                        HttpServletResponse response) throws IOException {
+        fileToDataBaseService.addNewFile(nameFile, response);
     }
 
     @PostMapping("/upload-file")
@@ -28,15 +30,17 @@ public class FileToDataBaseController {
         fileToDataBaseService.uploadFile(multipartFile, employeeId);
     }
 
-    @PostMapping("/update-file")
-    public byte[] updateFile(@RequestParam("fileId") UUID fileId,   //????
-                             @RequestParam("employeeId") UUID employeeId) {
-        return fileToDataBaseService.updateFile(fileId, employeeId);
-    }
+//    @PostMapping("/update-file")
+//    public byte[] updateFile(@RequestParam("fileId") UUID fileId,   //????
+//                             @RequestParam("employeeId") UUID employeeId) {
+//        return fileToDataBaseService.updateFile(fileId, employeeId);
+//    }
 
     @GetMapping("/download-file")
-    public byte[] downloadFile(@RequestParam UUID id) {
-        return fileToDataBaseService.downloadFile(id);
+    public void downloadFile(@RequestParam UUID id
+                                , HttpServletResponse response
+    ) {   //!!!
+        fileToDataBaseService.downloadFile(id, response);
     }
 
     @GetMapping("/file-info")
@@ -47,5 +51,10 @@ public class FileToDataBaseController {
     @GetMapping("/all-files")
     public List<FileToDataBaseDto> getAllFiles() {
         return fileToDataBaseService.getAllFiles();
+    }
+
+    @GetMapping("/properties-file")
+    public FileToDataBaseDto propertiesFile(@RequestParam UUID id) {
+        return fileToDataBaseService.getFileById(id);
     }
 }

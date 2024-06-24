@@ -1,11 +1,13 @@
 package com.panda.service;
 
 import com.panda.dto.FileToDataBaseDto;
+import com.panda.enums.Role;
 import com.panda.mapper.EmployeeMapper;import com.panda.mapper.FileToDataBaseMapper;
 import com.panda.model.FileTask;
 import com.panda.model.FileToDataBase;
 import com.panda.repository.FileToDataBaseRepository;
 import com.panda.mapper.EmployeeMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +40,8 @@ public class FileToDataBaseService {
      * @param nameFile
      */
     @Transactional
-    public void addNewFile(String nameFile) {
+    public void addNewFile(String nameFile, HttpServletResponse response) {
+        System.out.println(nameFile);
 
         try {
             File file = new File(pathToStorage + "/" + nameFile);
@@ -56,8 +59,11 @@ public class FileToDataBaseService {
                 fileToDataBaseRepository.save(fileToDataBase);
                 System.out.println("Файл создан"); //заменить на логи
 
+                response.sendRedirect("/user");
+
             } else {
                 System.out.println("Файл уже существует"); //заменить на логи
+                response.sendRedirect("/user");
             }
 
         } catch (IOException e) {
@@ -80,21 +86,36 @@ public class FileToDataBaseService {
      * @param id
      */
     @Transactional
-    public byte[] downloadFile(UUID id) {
+    public void downloadFile(UUID id, HttpServletResponse response) {
 
-        String filePath = getFileById(id).getPathToStorage();
+        FileToDataBaseDto fileToDataBaseDto = getFileById(id);
+
+        String filePath = fileToDataBaseDto.getPathToStorage();
+        String nameFileTypeFile = fileToDataBaseDto.getNameFile();
         System.out.println(filePath);
         byte[] encodedFile = null;
+//        OutputStream out = response.getOutputStream();
 
-        try {
-            encodedFile = Base64.getEncoder()
-                    .encode(Files.readAllBytes(Paths.get(filePath)));
+        try (OutputStream out = response.getOutputStream()) {
+            encodedFile = Files.readAllBytes(Paths.get(filePath));
+//            response.setHeader("Content-Disposition","inline");     //отображение файла в браузере
+            response.setHeader("Content-Disposition", "Attachment; fileName=" + nameFileTypeFile);    //скачивание файла на пк
+            out.write(encodedFile);
+
 //            Files.write(Paths.get(nameFile), Base64.getDecoder().decode(encodedFile));
         } catch (IOException e) {
             e.printStackTrace();
         }
+//        finally {
+//            try {
+//                out.close();
+//            } catch (IOException o) {
+//                o.printStackTrace();
+//            }
 
-        return encodedFile;
+//        }
+//
+//        return encodedFile;
     }
 
     /**
@@ -189,22 +210,22 @@ public class FileToDataBaseService {
      * @param employeeId
      * @return
      */
-    public byte[] updateFile(UUID fileId, UUID employeeId) {
-
-        FileToDataBaseDto fileToDataBaseDto = getFileById(fileId);
-        FileToDataBase fileToDataBase = fileToDataBaseMapper.toEntity(fileToDataBaseDto);
-
-        fileToDataBase.setIsActive(true);
-        fileToDataBase.setEmployee(employeeMapper.toEntity(employeeService.getEmployeeById(employeeId)));
-
-        fileToDataBaseRepository.save(fileToDataBase);
-
-//        getFileById(fileId)
-//                .setIsActive(true);
-//        getFileById(fileId)
-//                .setEmployee(employeeMapper.toEntity(employeeService.getEmployeeById(employeeId)));
-        return downloadFile(fileId);
-    }
+//    public byte[] updateFile(UUID fileId, UUID employeeId) {
+//
+//        FileToDataBaseDto fileToDataBaseDto = getFileById(fileId);
+//        FileToDataBase fileToDataBase = fileToDataBaseMapper.toEntity(fileToDataBaseDto);
+//
+//        fileToDataBase.setIsActive(true);
+//        fileToDataBase.setEmployee(employeeMapper.toEntity(employeeService.getEmployeeById(employeeId)));
+//
+//        fileToDataBaseRepository.save(fileToDataBase);
+//
+////        getFileById(fileId)
+////                .setIsActive(true);
+////        getFileById(fileId)
+////                .setEmployee(employeeMapper.toEntity(employeeService.getEmployeeById(employeeId)));
+//        downloadFile(fileId);
+//    }
 
     /**
      * получение строки по разделителю

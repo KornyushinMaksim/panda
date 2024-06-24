@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" media="all" href="/static/style.css" th:href="@{/style.css}" />
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="headerInner">
+                <a href="/">
+                    <div class="logo">
+                        <img src="/images/logo_panda.jpeg">
+                    </div>
+                </a>
+                <div class="headerMenu">
+                    <div>
+                        <a href="../fileStorage">Заявки</a>
+                    </div>
+                    <div>
+                        <a href="../contacts">Проектная команда</a>
+                    </div>
+                    <div>Клиенты</div>
+                    <div>Мои заявки</div>
+                </div>
+                <div class="search-profile">
+                    <div class="headerSearch">
+                        <input type="text" placeholder="Искать">
+                        <button class="search">Поиск</button>
+                    </div>
+                    <div class="headerProfile">
+                        <select name="">
+                            <option value="profile">Профиль</option>
+                            <option value="login">Войти</option>
+                            <option value="">3</option>
+                            <option value="exit">Выйти</option>
+                        </select>
+                        <img src="/images/logo_profile.png">
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Body -->
+        <div class="containerBody">
+            <div class="table">
+                <div id="propertiesFile">
+                    <div id="taskDetails">
+                        <!-- Здесь будет отображаться подробная информация о задаче -->
+                    </div>
+
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const taskId = urlParams.get('id');
+
+                            // Здесь можно выполнить запрос на сервер для получения подробной информации о задаче по её ID
+                            // Пример запроса
+                            fetch(`http://localhost:8080/tasks/get-task-by-id/${taskId}`)
+                                .then(response => response.json())
+                                .then(data => {
+
+                                    var execut = '';
+                                    var te = data.executors;
+                                    for (j = 0; j < te.length; j++) {
+                                        execut += `${te[j].name} ${te[j].surname}<br>`
+                                    };
+
+                                    const taskDetailsDiv = document.getElementById('taskDetails');
+
+                                    taskDetailsDiv.innerHTML = `
+                                    <h1> ${data.nameTask}</h1><br><br>
+                                        <div class="propertiesFileTitleBox">
+                                            <div class="logoFile" style="background:url(/images/typeFile/${data.fileId.typeFile}.png);
+                                             background-repeat: no-repeat;
+                                             background-size: cover;'">
+                                            </div>
+                                            <div class="propertiesFileInfoText">
+                                                <div class="propertiesFileInfoTextAuthor">
+                                                    <p>Исполнитель:</p>
+                                                    <div>${execut}</div>
+                                                </div><br>
+                                                <div class="propertiesFileInfoTextDate">
+                                                    <p>Заказчик: </p>
+                                                    <div>${data.customerId.nameOrg}</div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                здесь будет примечание
+                                            </div>
+                                            <div class="propertiesFileDateInfo">
+                                                <p>дедлайн</p>
+                                                <div>${data.deadLine}</div>
+                                            </div>
+                                        </div>
+                                    `;
+                                })
+                                .catch(error => console.error('Ошибка получения данных о задаче:', error));
+                        });
+                    </script>
+                    <!-- // <p><strong>ID:</strong> ${data.id}</p>
+// <p><strong>Название файла:</strong> ${data.nameFile}</p>
+// <p><strong>Размер:</strong> ${data.size} байт</p>
+// <p><strong>Тип файла:</strong> ${data.typeFile}</p>
+// <p><strong>Дата изменения:</strong> ${data.dateOfChange}</p>
+// <p><strong>Путь к хранилищу:</strong> ${data.pathToStorage}</p> -->
+
+
+                    <!-- <h1 th:text="${data.nameFile}"></h1><br><br>
+                    <div class="propertiesFileTitleBox">
+                        <div class="logoFile" th:style="'background:url(' + @{/images/typeFile/{type}.png(type = ${data.typeFile})} +');
+                         background-repeat: no-repeat;
+                         background-size: cover;'">
+                        </div>
+                        <div class="propertiesFileInfoText">
+                            <div class="propertiesFileInfoTextAuthor">
+                                <p>Исполнитель:</p>
+                                <div th:text="fileId.author"></div>
+                            </div><br>
+                            <div class="propertiesFileInfoTextDate">
+                                <p>Заказчик: </p>
+                                <div>заказчик</div>
+                            </div>
+                        </div>
+                        <div>
+                            здесь будет примечание
+                        </div>
+                        <div class="propertiesFileDateInfo">
+                            <div th:text="${data.dateOfChange}"></div>
+                            <div>дедлайн</div>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="commit">
+                    <div class="commitBtn">
+                        <button onclick="toggleVisibility()">Добавить комментарий</button>
+                    </div>
+                    <!-- <div class="comms">
+                        <div th:each="el : ${commits}" class="commits">
+                            <p th:text="${el.author} + '    ' + ${el.date}"></p>
+                            <div th:text="${el.commit}"></div>
+                            <br><br>
+                        </div>    
+                    </div> -->
+                </div>
+            </div>
+
+            <div id="docAdd" style="display: none;">
+                <h3>Добавление комментария</h3>
+                <div class="containerDocAdd">
+                    <form action="" method="post">
+                        <div th:type="number" name="idApplication" value="${fileStorage.id}"></div>
+                        <input type="text" name="author" value=fileStorage.author>
+
+                        <!--                        <div type="text" th:text="${fileStorage.author}" name="author"></div>      &lt;!&ndash;????????&ndash;&gt;-->
+                        <textarea name="commit" id="" cols="30" rows="10" placeholder="Комментарий"></textarea>
+                        <div class="bottons">
+                            <button onclick="toggleVisibility()" type="submit" name="select"
+                                value="add">Отправить</button>
+                            <button onclick="toggleVisibility()" type="submit" name="select"
+                                value="close">Отмена</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script src="/script.js"></script>
+</body>
+
+</html>
