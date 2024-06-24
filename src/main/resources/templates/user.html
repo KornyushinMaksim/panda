@@ -96,7 +96,7 @@
                     <form id="taskForm" action="/tasks/add-task" method="post">
                         <div class="form-group">
                             <label for="taskName">Название задачи:</label>
-                            <input type="text" id="taskName" name="taskName">
+                            <input type="text" id="nameTask" name="taskName">
                         </div>
                         <div class="form-group">
                             <label for="customer">Заказчик:</label>
@@ -104,11 +104,11 @@
                         </div>
                         <div class="form-group">
                             <label for="executor">Исполнитель:</label>
-                            <input type="text" id="executor" name="executor">
+                            <input type="text" id="executors" name="executor">
                         </div>
                         <div class="form-group">
                             <label for="fileList">Выберите файл:</label>
-                            <select id="fileList" name="fileList"></select>
+                            <select id="fileList" name="fileId"></select>
                         </div>
                         <button type="submit" onclick="toggleVisibility()">Создать задачу</button>
                         <button type="submit" onclick="toggleVisibility()">Отменить создание</button>
@@ -145,39 +145,39 @@
                                 fileId: this.fileList.value,
                             });
                             // JavaScript для обработки отправки формы
-                            document.getElementById('taskForm').addEventListener('submit', function (event) {
-                                event.preventDefault(); // Предотвращаем отправку формы по умолчанию
+                            // document.getElementById('taskForm').addEventListener('submit', function (event) {
+                            //     event.preventDefault(); // Предотвращаем отправку формы по умолчанию
 
-                                // Собираем данные формы в объект FormData
-                                const formData = new FormData();
-                                formData.append('nameTask', this.taskName.value);
-                                formData.append('customer', this.customer.value);
-                                formData.append('executor', this.executor.value);
-                                formData.append('fileId', this.fileList.value);
+                            //     // Собираем данные формы в объект FormData
+                            //     const formData = new FormData();
+                            //     formData.append('nameTask', this.taskName.value);
+                            //     formData.append('customer', this.customer.value);
+                            //     formData.append('executor', this.executor.value);
+                            //     formData.append('fileId', this.fileList.value);
 
-                                // Отправляем POST-запрос на сервер
-                                fetch('http://localhost:8080/tasks/add-task', {
-                                    method: 'POST',
-                                    body: formData
-                                })
-                                    .then(response => {
-                                        if (!response.ok) {
-                                            throw new Error('Ошибка HTTP ' + response.status);
-                                        }
-                                        return response.json();
-                                    })
-                                    .then(data => {
-                                        console.log('Задача успешно создана:', data);
-                                        // Опционально: добавить здесь логику для обработки успешного создания задачи
-                                    })
-                                    .catch(error => {
-                                        console.error('Ошибка при создании задачи:', error);
-                                        // Опционально: добавить здесь логику для обработки ошибок при создании задачи
-                                    });
+                            //     // Отправляем POST-запрос на сервер
+                            //     fetch('http://localhost:8080/tasks/add-task', {
+                            //         method: 'POST',
+                            //         body: formData
+                            //     })
+                            //         .then(response => {
+                            //             if (!response.ok) {
+                            //                 throw new Error('Ошибка HTTP ' + response.status);
+                            //             }
+                            //             return response.json();
+                            //         })
+                            //         .then(data => {
+                            //             console.log('Задача успешно создана:', data);
+                            //             // Опционально: добавить здесь логику для обработки успешного создания задачи
+                            //         })
+                            //         .catch(error => {
+                            //             console.error('Ошибка при создании задачи:', error);
+                            //             // Опционально: добавить здесь логику для обработки ошибок при создании задачи
+                            //         });
 
-                                // Опционально: очистка формы после отправки
-                                this.reset();
-                            });
+                            //     // Опционально: очистка формы после отправки
+                            //     this.reset();
+                            // });
                         });
                     </script>
                 </div>
