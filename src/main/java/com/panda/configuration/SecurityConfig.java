@@ -43,12 +43,9 @@ public class SecurityConfig {
             if (roles.contains("ROLE_ADM")) {
                 response.sendRedirect("/admin"); //доступ к странице админа для админов
                 return;
-            } else if (roles.contains("ROLE_USR")) {
-                response.sendRedirect("/user");   //доступ к странице юзера для юзеров
-                return;
             }
 
-            response.sendRedirect("/denied");
+            response.sendRedirect("/tasks");
         };
     }
 
@@ -79,10 +76,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/", "/lo").permitAll()
-                        .requestMatchers("/admin").hasRole("ADM")
-                        .requestMatchers("/user").hasRole("USR")
-                        .anyRequest().permitAll()
+                        .requestMatchers("/", "/lo", "/static/**").permitAll()
+                        .requestMatchers("/admin", "tasksAdmin").hasRole("ADM")
+                        .requestMatchers("/tasks/**", "/files/**").hasAnyRole("ADM", "USR")
+                        .anyRequest().authenticated()
                 )
                 .formLogin(securityFormLoginConfigurer -> securityFormLoginConfigurer
                         .loginPage("/lo")

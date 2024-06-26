@@ -1,8 +1,8 @@
 package com.panda.dto;
 
-import com.panda.model.Customer;
+//import com.panda.model.Customer;
 import com.panda.model.Employee;
-import com.panda.model.FileToDataBase;
+//import com.panda.model.FileToDataBase;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,11 +23,11 @@ public class FileTaskDto {
 
     private String nameTask;
 
-    private FileToDataBaseDto fileId;
+    private UUID fileId;
 
-    private EmployeeDto authorTask;
+    private UUID authorTask;
 
-    private CustomerDto customerId;
+    private UUID customerId;
 
     private Set<EmployeeDto> executors;
 

@@ -24,13 +24,13 @@ public class FileTask {
     @Column(name = "name_task")
     private String nameTask;
 
-    @OneToOne(fetch = FetchType.LAZY)
+//    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "file_id")
-    private FileToDataBase fileId;
+    private UUID fileId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+//    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    private Customer customerId;
+    private UUID customerId;
 
     @ManyToMany
     @JoinTable(name = "file_employee_relation",
@@ -41,9 +41,9 @@ public class FileTask {
     @Column(name = "dead_line")
     private LocalDate deadLine;
 
-    @OneToOne(fetch = FetchType.LAZY)
+//    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_task")
-    private Employee authorTask;
+    private UUID authorTask;
 
 //   @OneToMany(mappedBy = "fileTaskId")
 //   private List<Comment> comments;

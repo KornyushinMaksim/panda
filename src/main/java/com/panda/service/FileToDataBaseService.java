@@ -1,12 +1,9 @@
 package com.panda.service;
 
 import com.panda.dto.FileToDataBaseDto;
-import com.panda.enums.Role;
 import com.panda.mapper.EmployeeMapper;import com.panda.mapper.FileToDataBaseMapper;
-import com.panda.model.FileTask;
 import com.panda.model.FileToDataBase;
 import com.panda.repository.FileToDataBaseRepository;
-import com.panda.mapper.EmployeeMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +15,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -89,6 +85,7 @@ public class FileToDataBaseService {
     public void downloadFile(UUID id, HttpServletResponse response) {
 
         FileToDataBaseDto fileToDataBaseDto = getFileById(id);
+        FileToDataBase fileToDataBase = fileToDataBaseMapper.toEntity(fileToDataBaseDto);
 
         String filePath = fileToDataBaseDto.getPathToStorage();
         String nameFileTypeFile = fileToDataBaseDto.getNameFile();
@@ -101,6 +98,10 @@ public class FileToDataBaseService {
 //            response.setHeader("Content-Disposition","inline");     //отображение файла в браузере
             response.setHeader("Content-Disposition", "Attachment; fileName=" + nameFileTypeFile);    //скачивание файла на пк
             out.write(encodedFile);
+
+            fileToDataBase.setIsActive(true);
+
+            fileToDataBaseRepository.save(fileToDataBase);
 
 //            Files.write(Paths.get(nameFile), Base64.getDecoder().decode(encodedFile));
         } catch (IOException e) {

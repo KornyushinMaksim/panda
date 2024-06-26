@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 row.appendChild(cellName);
         
                 const cellCustomer = document.createElement('td');
-                cellCustomer.textContent = task.customerId.nameOrg;
+                cellCustomer.textContent = task.customerId;
                 row.appendChild(cellCustomer);
         
                 const cellDeadline = document.createElement('td');
@@ -65,16 +65,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // // Функция для получения задач и отображения их в таблице
 // async function fetchTasks() {
-//     try {
-//         const response = await fetch('http://localhost:8080/tasks/all-tasks');
-//         if (!response.ok) {
-//             throw new Error('Ошибка!!! при загрузке данных с сервера');
-//         }
-//         const tasks = await response.json();
-//         displayTasks(tasks);
-//     } catch (error) {
-//         console.error('Ошибка:', error);
-//     }
+    // try {
+    //     const response = await fetch('http://localhost:8080/tasks/all-tasks');
+    //     if (!response.ok) {
+    //         throw new Error('Ошибка!!! при загрузке данных с сервера');
+    //     }
+    //     const tasks = await response.json();
+    //     displayTasks(tasks);
+    // } catch (error) {
+    //     console.error('Ошибка:', error);
+    // }
 // }
 
 // // Функция для отображения списка сотрудников в таблице
@@ -152,58 +152,58 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // }
 
-function sendRequest(id) {
-    console.log('sadfasd')
-    var url = 'http://localhost:8080/tasks/get-task-by-id?id=' + encodeURIComponent(id);
+// function sendRequest(id) {
+//     console.log('sadfasd')
+//     var url = 'http://localhost:8080/tasks/get-task-by-id?id=' + encodeURIComponent(id);
 
-    // console.log(id)
+//     // console.log(id)
 
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            var execut = '';
-            var te = data.executors;
-            for (j = 0; j < te.length; j++) {
-                execut += `${te[j].name} ${te[j].surname}<br>`
-            };
+//     fetch(url)
+//         .then(response => response.json())
+//         .then(data => {
+//             var execut = '';
+//             var te = data.executors;
+//             for (j = 0; j < te.length; j++) {
+//                 execut += `${te[j].name} ${te[j].surname}<br>`
+//             };
 
-            const fileData = document.getElementById('propertiesFile');
+//             const fileData = document.getElementById('propertiesFile');
 
-            fileData.innerHTML = `
-            <h1> ${data.nameTask}</h1><br><br>
-<div class="propertiesFileTitleBox">
-    <div class="logoFile" th:style="'background:url(' + @{/images/typeFile/{type}.png(type = ${data.fileId.typeFile})} +');
-     background-repeat: no-repeat;
-     background-size: cover;'">
-    </div>
-    <div class="propertiesFileInfoText">
-        <div class="propertiesFileInfoTextAuthor">
-            <p>Исполнитель:</p>
-            <div>${execut}</div>
-        </div><br>
-        <div class="propertiesFileInfoTextDate">
-            <p>Заказчик: </p>
-            <div>${data.customerId.nameOrg}</div>
-        </div>
-    </div>
-    <div>
-        здесь будет примечание
-    </div>
-    <div class="propertiesFileDateInfo">
-        <div>дедлайн</div>
-        <div>${data.deadLine}</div>
-    </div>
-</div>
+//             fileData.innerHTML = `
+//             <h1> ${data.nameTask}</h1><br><br>
+// <div class="propertiesFileTitleBox">
+//     <div class="logoFile" th:style="'background:url(' + @{/images/typeFile/{type}.png(type = ${data.fileId.typeFile})} +');
+//      background-repeat: no-repeat;
+//      background-size: cover;'">
+//     </div>
+//     <div class="propertiesFileInfoText">
+//         <div class="propertiesFileInfoTextAuthor">
+//             <p>Исполнитель:</p>
+//             <div>${execut}</div>
+//         </div><br>
+//         <div class="propertiesFileInfoTextDate">
+//             <p>Заказчик: </p>
+//             <div>${data.customerId.nameOrg}</div>
+//         </div>
+//     </div>
+//     <div>
+//         здесь будет примечание
+//     </div>
+//     <div class="propertiesFileDateInfo">
+//         <div>дедлайн</div>
+//         <div>${data.deadLine}</div>
+//     </div>
+// </div>
 
 
-            `;
-        })
-        .catch(error => {
-            console.error("Ошибка при получении данных:", error);
-            fileData.innerHTML = '<p>Произошла ошибка при получении данных.</p>';
-        });
+//             `;
+//         })
+//         .catch(error => {
+//             console.error("Ошибка при получении данных:", error);
+//             fileData.innerHTML = '<p>Произошла ошибка при получении данных.</p>';
+//         });
 
-}
+// }
 
 // function mybtn(id) {
 //     // myButton.addEventListener('click', () => {

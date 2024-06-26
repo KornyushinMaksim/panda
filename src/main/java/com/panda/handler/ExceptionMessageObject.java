@@ -1,4 +1,4 @@
-package com.panda.hendler;
+package com.panda.handler;
 
 import lombok.Builder;
 import lombok.Data;

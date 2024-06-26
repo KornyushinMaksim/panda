@@ -1,4 +1,4 @@
-package com.panda.hendler;
+package com.panda.handler;
 
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
