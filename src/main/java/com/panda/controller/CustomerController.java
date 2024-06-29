@@ -3,7 +3,6 @@ package com.panda.controller;
 import com.panda.dto.CustomerDto;
 import com.panda.service.CustomerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;

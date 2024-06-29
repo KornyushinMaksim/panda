@@ -17,6 +17,4 @@ public class DepartmentDto {
 
     private String name;
 
-//    private EmployeeDto boss;
-
 }

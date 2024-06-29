@@ -1,6 +1,6 @@
 package com.panda.service;
 
-import com.panda.dto.DepartmentDto;import com.panda.dto.DepartmentDto;
+import com.panda.dto.DepartmentDto;
 import com.panda.mapper.DepartmentMapper;
 import com.panda.model.Department;
 import com.panda.repository.DepartmentRepository;

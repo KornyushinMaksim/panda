@@ -1,9 +1,7 @@
 package com.panda.validator;
 
-import com.panda.dto.AuthenticationDto;
 import com.panda.model.Authentication;
 import com.panda.repository.AuthenticationRepository;
-import com.panda.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

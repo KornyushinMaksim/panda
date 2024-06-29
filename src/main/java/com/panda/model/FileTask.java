@@ -2,10 +2,8 @@ package com.panda.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.yaml.snakeyaml.tokens.CommentToken;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,9 +22,9 @@ public class FileTask {
     @Column(name = "name_task")
     private String nameTask;
 
-//    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "file_id")
-    private UUID fileId;
+    private FileToDataBase fileId;
 
 //    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")

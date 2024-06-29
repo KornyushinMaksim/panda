@@ -1,13 +1,10 @@
 package com.panda.controller;
 
 import com.panda.dto.CommentDto;
-import com.panda.repository.CommentRepository;
 import com.panda.service.CommentService;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.plaf.synth.ColorType;
 import java.util.List;
 import java.util.UUID;
 

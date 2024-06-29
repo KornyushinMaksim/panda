@@ -1,9 +1,5 @@
 package com.panda.dto;
 
-//import com.panda.model.Customer;
-import com.panda.model.Employee;
-//import com.panda.model.FileToDataBase;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +19,7 @@ public class FileTaskDto {
 
     private String nameTask;
 
-    private UUID fileId;
+    private FileToDataBaseDto fileId;
 
     private UUID authorTask;
 

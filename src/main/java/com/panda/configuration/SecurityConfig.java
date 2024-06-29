@@ -6,10 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -29,19 +27,15 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
 
-    /**
-     *
-     * @return
-     */
     @Bean
     public AuthenticationSuccessHandler successHandler() {
         return (request, response, authentication) -> {
             Set<String> roles = AuthorityUtils
-                .authorityListToSet(authentication
-                                    .getAuthorities());
+                    .authorityListToSet(authentication
+                            .getAuthorities());
 
             if (roles.contains("ROLE_ADM")) {
-                response.sendRedirect("/admin"); //доступ к странице админа для админов
+                response.sendRedirect("/admin");
                 return;
             }
 
@@ -77,16 +71,15 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/", "/lo", "/static/**").permitAll()
-                        .requestMatchers("/admin", "tasksAdmin").hasRole("ADM")
-                        .requestMatchers("/tasks/**", "/files/**").hasAnyRole("ADM", "USR")
-                        .anyRequest().authenticated()
+//                        .requestMatchers("/admin", "tasksAdmin").hasRole("ADM")
+//                        .requestMatchers("/tasks/**", "/files/**").hasAnyRole("ADM", "USR")
+                        .anyRequest().permitAll()
                 )
                 .formLogin(securityFormLoginConfigurer -> securityFormLoginConfigurer
                         .loginPage("/lo")
                         .successHandler(successHandler())
                         .permitAll()
                 )
-//                .formLogin( AbstractAuthenticationFilterConfigurer::permitAll)
                 .userDetailsService(userDetailsService)
                 .exceptionHandling(exception ->
                         exception.accessDeniedHandler(deniedHandler()))

@@ -2,13 +2,11 @@ package com.panda.service;
 
 import com.panda.dto.EmployeeDto;
 import com.panda.dto.FileTaskDto;
-import com.panda.dto.FileToDataBaseDto;
 import com.panda.mapper.EmployeeMapper;
 import com.panda.mapper.FileTaskMapper;
 import com.panda.model.Employee;
 import com.panda.model.FileTask;
 import com.panda.repository.FileTaskRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,13 +21,12 @@ public class FileTaskService {
     private final FileTaskRepository fileTaskRepository;
     private final FileTaskMapper fileTaskMapper;
     private final EmployeeMapper employeeMapper;
-    private final FileToDataBaseService fileToDataBaseService;
-    private final CustomerService customerService;
     private final EmployeeService employeeService;
 
     /**
      * добавляет новую задачу и назначает сотрудников,
      * которые ее будут выполнять
+     *
      * @param fileTaskDto
      * @return
      */
@@ -56,6 +53,7 @@ public class FileTaskService {
 
     /**
      * изменение задачи                 //???
+     *
      * @param fileTaskDto
      * @return
      */

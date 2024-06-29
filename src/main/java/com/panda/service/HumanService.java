@@ -4,12 +4,8 @@ import com.panda.dto.AddressDto;
 import com.panda.dto.EmployeeDto;
 import com.panda.dto.HumanDto;
 import com.panda.mapper.EmployeeMapper;
-import com.panda.dto.AddressDto;
-import com.panda.dto.EmployeeDto;
-import com.panda.dto.HumanDto;
 import com.panda.enums.City;
 import com.panda.enums.Gender;
-import com.panda.mapper.EmployeeMapper;
 import com.panda.mapper.HumanMapper;
 import com.panda.model.Address;
 import com.panda.model.Employee;
@@ -96,7 +92,6 @@ public class HumanService {
         employee.setHumanId(savedEntity.getId());
 
         System.out.println();
-//        addNewEmployee(human);
 
         return humanMapper.toDto(savedEntity);
     }

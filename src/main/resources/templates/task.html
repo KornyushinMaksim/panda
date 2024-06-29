@@ -58,36 +58,46 @@
                     </div>
                     <div class="commit">
                         <div class="commitBtn">
-                            <button onclick="download()">Скачать файл</button>
+                            <div id="load">
+                                <!-- Здесь будет отображаться кнопка скачивания файла -->
+                            </div>
+
                         </div>
                         <div class="commitBtn">
                             <button onclick="toggleVisibility()">Загрузить файл</button>
                         </div>
-    
 
-                    <script>
-                        const fId = '';
 
-                        document.addEventListener("DOMContentLoaded", function () {
-                            const urlParams = new URLSearchParams(window.location.search);
-                            const taskId = urlParams.get('id');
+                        <script>
 
-                            // Здесь можно выполнить запрос на сервер для получения подробной информации о задаче по её ID
-                            // Пример запроса
-                            fetch(`http://localhost:8080/tasks/get-task-by-id/${taskId}`)
-                                .then(response => response.json())
-                                .then(data => {
-                                    console.log(data.fileId.id);
+                            document.addEventListener("DOMContentLoaded", function () {
+                                const urlParams = new URLSearchParams(window.location.search);
+                                const taskId = urlParams.get('id');
 
-                                    var execut = '';
-                                    var te = data.executors;
-                                    for (j = 0; j < te.length; j++) {
-                                        execut += `${te[j].name} ${te[j].surname}<br>`
-                                    };
+                                // Здесь можно выполнить запрос на сервер для получения подробной информации о задаче по её ID
+                                // Пример запроса
+                                fetch(`http://localhost:8080/tasks/get-task-by-id/${taskId}`)
+                                    .then(response => response.json())
+                                    .then(data => {
 
-                                    const taskDetailsDiv = document.getElementById('taskDetails');
 
-                                    taskDetailsDiv.innerHTML = `
+                                        var execut = '';
+                                        var te = data.executors;
+                                        for (j = 0; j < te.length; j++) {
+                                            execut += `${te[j].name} ${te[j].surname}<br>`
+                                        };
+
+                                        let loadBtn = document.getElementById('load');
+                                        loadBtn.innerHTML = `
+                                            <a href=http://localhost:8080/files/download-file/${data.fileId} download >
+                                                <button >Скачать файл</button>
+                                            </a>
+                                            `;
+
+
+                                        const taskDetailsDiv = document.getElementById('taskDetails');
+                                            console.log(data.fileId);
+                                        taskDetailsDiv.innerHTML = `
                                     <h1> ${data.nameTask}</h1><br><br>
                                         <div class="propertiesFileTitleBox">
                                             <div class="logoFile" style="background:url(/images/typeFile/${data.fileId.typeFile}.png);
@@ -113,35 +123,13 @@
                                             </div>
                                         </div>
                                     `;
-                                })
-                                .catch(error => console.error('Ошибка получения данных о задаче:', error));
-                        });
-
-                        function download() {
-                            // Пример использования Fetch API для отправки POST запроса
-                            // const fId = fileId.id; // замените на актуальное значение
-                            const url = `http://localhost:8080/files/download-file?id=${fId}`;
-
-                            fetch(url, {
-                                method: 'POST',
-                                // Здесь можно указать дополнительные параметры запроса, например, заголовки или тело запроса
-                            })
-                            .then(response => {
-                                // Обработка ответа от сервера, если необходимо
-                                // Например, можно проверить статус ответа и выполнить дальнейшие действия
-                                if (!response.ok) {
-                                    throw new Error('Ошибка скачивания файла');
-                                }
-                                // Дополнительная обработка ответа, если нужно
-                            })
-                            .catch(error => {
-                                console.error('Произошла ошибка при скачивании файла:', error);
+                                    })
+                                    .catch(error => console.error('Ошибка получения данных о задаче:', error));
                             });
 
-                        }
 
-                    </script>
-                    <!-- // <p><strong>ID:</strong> ${data.id}</p>
+                        </script>
+                        <!-- // <p><strong>ID:</strong> ${data.id}</p>
 // <p><strong>Название файла:</strong> ${data.nameFile}</p>
 // <p><strong>Размер:</strong> ${data.size} байт</p>
 // <p><strong>Тип файла:</strong> ${data.typeFile}</p>
@@ -149,7 +137,7 @@
 // <p><strong>Путь к хранилищу:</strong> ${data.pathToStorage}</p> -->
 
 
-                    <!-- <h1 th:text="${data.nameFile}"></h1><br><br>
+                        <!-- <h1 th:text="${data.nameFile}"></h1><br><br>
                     <div class="propertiesFileTitleBox">
                         <div class="logoFile" th:style="'background:url(' + @{/images/typeFile/{type}.png(type = ${data.typeFile})} +');
                          background-repeat: no-repeat;
@@ -173,41 +161,41 @@
                             <div>дедлайн</div>
                         </div>
                     </div> -->
-                </div>
-                <div class="commit">
-                    <div class="commitBtn">
-                        <button onclick="toggleVisibility()">Добавить комментарий</button>
                     </div>
-                    <!-- <div class="comms">
+                    <div class="commit">
+                        <div class="commitBtn">
+                            <button onclick="toggleVisibility()">Добавить комментарий</button>
+                        </div>
+                        <!-- <div class="comms">
                         <div th:each="el : ${commits}" class="commits">
                             <p th:text="${el.author} + '    ' + ${el.date}"></p>
                             <div th:text="${el.commit}"></div>
                             <br><br>
                         </div>    
                     </div> -->
+                    </div>
                 </div>
-            </div>
 
-            <div id="docAdd" style="display: none;">
-                <h3>Добавление комментария</h3>
-                <div class="containerDocAdd">
-                    <form action="" method="post">
-                        <div th:type="number" name="idApplication" value="${fileStorage.id}"></div>
-                        <input type="text" name="author" value=fileStorage.author>
+                <div id="docAdd" style="display: none;">
+                    <h3>Добавление комментария</h3>
+                    <div class="containerDocAdd">
+                        <form action="" method="post">
+                            <div th:type="number" name="idApplication" value="${fileStorage.id}"></div>
+                            <input type="text" name="author" value=fileStorage.author>
 
-                        <!--                        <div type="text" th:text="${fileStorage.author}" name="author"></div>      &lt;!&ndash;????????&ndash;&gt;-->
-                        <textarea name="commit" id="" cols="30" rows="10" placeholder="Комментарий"></textarea>
-                        <div class="bottons">
-                            <button onclick="toggleVisibility()" type="submit" name="select"
-                                value="add">Отправить</button>
-                            <button onclick="toggleVisibility()" type="submit" name="select"
-                                value="close">Отмена</button>
-                        </div>
-                    </form>
+                            <!--                        <div type="text" th:text="${fileStorage.author}" name="author"></div>      &lt;!&ndash;????????&ndash;&gt;-->
+                            <textarea name="commit" id="" cols="30" rows="10" placeholder="Комментарий"></textarea>
+                            <div class="bottons">
+                                <button onclick="toggleVisibility()" type="submit" name="select"
+                                    value="add">Отправить</button>
+                                <button onclick="toggleVisibility()" type="submit" name="select"
+                                    value="close">Отмена</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
     <!-- <script src="/script.js"></script> -->
 </body>

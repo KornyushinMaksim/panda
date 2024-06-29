@@ -3,10 +3,6 @@ package com.panda.service;
 import com.panda.dto.AuthenticationDto;
 import com.panda.dto.EmployeeDto;
 import com.panda.mapper.AuthenticationMapper;
-import com.panda.dto.AuthenticationDto;
-import com.panda.dto.EmployeeDto;
-import com.panda.mapper.AuthenticationMapper;
-import com.panda.mapper.EmployeeMapper;
 import com.panda.model.Authentication;
 import com.panda.repository.AuthenticationRepository;
 import com.panda.validator.AuthenticationValidator;
@@ -87,21 +83,4 @@ public class AuthenticationService {
         return authenticationRepository.findById(id);
     }
 
-//    /**
-//     * получение аутентификации по employee_id(optional)
-//     * @param id
-//     * @return
-//     */
-//    public Optional<Authentication> findAuthenticationByEmployeeId(UUID id) {
-//        return authenticationRepository.findAuthenticationByEmployeeId(id);
-//    }
-//
-//    /**
-//     * получение аутентификации по login(optional)
-//     * @param login
-//     * @return
-//     */
-//    public Optional<Authentication> findAuthenticationByLogin(String login) {
-//        return authenticationRepository.findAuthenticationByLogin(login);
-//    }
 }

@@ -1,7 +1,5 @@
 package com.panda.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.panda.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

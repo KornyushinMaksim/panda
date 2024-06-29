@@ -66,34 +66,15 @@
                     <tbody id="tasksTableBody">
 
                     </tbody>
-                    <!--                <tbody th:each="el : ${fileStorage}">-->
-                    <!--                <tr>-->
-                    <!--                    <td th:text="${el.id}"></td>-->
-                    <!--                    <td>-->
-                    <!--                        <a th:href="'propertiesFile/' + ${el.id}">-->
-                    <!--                            <div th:text="${el.name}"></div>-->
-                    <!--                        </a>-->
-                    <!--                    </td>-->
-                    <!--                    <td th:text="${el.typeFile}"></td>-->
-                    <!--                    <td th:text="${el.date}"></td>-->
-                    <!--                    <td th:text="${el.size}"></td>-->
-                    <!--                    <td>-->
-                    <!--                        <a th:href="profileStuff" th:text="${el.author}"></a>-->
-                    <!--                    </td>-->
-                    <!--                    <td th:text="${el.info}"></td>-->
-                    <!--                </tr>-->
-                    <!--                </tbody>-->
                 </table>
                 <button onclick="toggleVisibility()">Добавить</button>
                 <button onclick="toggleVisibility1()">открыть</button>
-
-
             </div>
 
             <div id="docAdd" style="display: none;">
                 <h3>Создание заявки</h3>
                 <div class="containerDocAdd">
-                    <form id="taskForm" method="post">
+                    <form id="taskForm">
                         <div class="form-group">
                             <label for="taskName">Название задачи:</label>
                             <input type="text" id="nameTask" name="nameTask">
@@ -101,6 +82,10 @@
                         <div class="form-group">
                             <label for="customer">Заказчик:</label>
                             <input type="text" id="customerId" name="customerId">
+                        </div>
+                        <div class="form-group">
+                            <label for="deadLine">Заказчик:</label>
+                            <input type="date" id="deadLine" name="deadLine">
                         </div>
                         <div class="form-group">
                             <label for="executors">Исполнители:</label>
@@ -119,6 +104,7 @@
                     </form>
 
                     <script>
+
                         // Загрузка списка файлов с сервера
                         async function loadDataAndPopulateDropdown(url, dropdownId) {
                             try {
@@ -136,7 +122,6 @@
                                     const option = document.createElement('option');
                                     option.value = item.id; // Предполагается, что каждый элемент имеет поле id
                                     option.textContent = item.name; // Предполагается, что каждый элемент имеет поле name
-                                    console.log(item.name)
                                     dropdown.appendChild(option);
                                 });
 
@@ -151,59 +136,76 @@
                             loadDataAndPopulateDropdown('http://localhost:8080/files/all-files', 'fileId');
                         });
 
-
-                        // window.onload = function () {
-                        //     fetch('http://localhost:8080/files/all-files')
-                        //         .then(response => response.json())
-                        //         .then(data => {
-                        //             const fileList = document.getElementById('fileId');
-                        //             data.forEach(file => {
-                        //                 const option = document.createElement('option');
-                        //                 option.value = file.id; // Здесь предполагается, что у файла есть уникальный идентификатор
-                        //                 option.textContent = file.nameFile; // Предположим, что у файла есть поле "name"
-                        //                 fileList.appendChild(option);
-                        //             });
-                        //         })
-                        //         .catch(error => console.error('Ошибка при загрузке списка файлов:', error));
-                        // };
-
-                        // JavaScript для обработки отправки формы
-                        // let form = document.getElementById('taskForm');
-                        // form.addEventListener('click', function (event) {
-                        //     event.preventDefault(); // Предотвращаем отправку формы по умолчанию
-
-                        //     // Дополнительная логика обработки данных формы, если нужно
-
-                        //     // Пример вывода данных в консоль
-                        //     console.log('12345', {
-                        //         nameTask: this.nameTask.value,
-                        //         customerId: this.customerId.value,
-                        //         executors: this.executors.value,
-                        //         fileId: this.fileId.value,
-                        //     });
-                        // JavaScript для обработки отправки формы
                         document.getElementById('taskForm').addEventListener('submit', function (event) {
-                            event.preventDefault(); // Предотвращаем отправку формы по умолчанию
-                            console.log('1234');
+                            event.preventDefault(); // Предотвращаем отправку формы по умолчанию                                    console.log('1234');
 
                             // Собираем данные формы в объект FormData
-                            // const formData = new FormData();
-                            // formData.append('nameTask', this.nameTask.value);
-                            // formData.append('customerId', this.customerId.value);
-                            // formData.append('executors', this.executors.value);
-                            // formData.append('fileId', this.fileId.value);
                             const nameTask = document.getElementById('nameTask').value;
                             const customerId = document.getElementById('customerId').value;
                             const executors = document.getElementById('executors').value;
                             const fileId = document.getElementById('fileId').value;
-                            console.log(executors);
+                            const deadLine = document.getElementById('deadLine').value;
 
-                            // Формируем URL для запроса
-                            const url = `http://localhost:8080/employee/get-employee-by-id?id=${executors}`;
+
+                            const employee = getEmployee(executors);
+                            const myFileDB = getFileDB(fileId);
+                            console.log('empl');
+                            console.log(employee);
+                            console.log('mf');
+                            console.log(myFileDB);
+
+                            // Данные о задаче, которые нужно отправить на сервер
+                            const taskData = {
+                                fileId: {
+                                    myFileDB
+                                },
+                                nameTask: nameTask,
+                                authorTask: '',
+                                customerId: customerId,
+                                executors: {
+                                    employee
+                                },
+                                deadLine: deadLine,
+                            };
+                            console.log('enter taskData');
+                            console.log(taskData);
+
+                            // URL сервера, куда отправляем запрос
+                            const urlTaskData = 'http://localhost:8080/tasks/add-task';
+
+                            // Формирование POST запроса с использованием Fetch API
+                            fetch(urlTaskData, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json', // Указываем тип содержимого (JSON)
+                                },
+                                body: JSON.stringify(taskData) // Преобразуем объект в JSON строку для отправки
+                            })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json(); // Разбираем JSON ответ в JavaScript объект
+                                })
+                                .then(data => {
+                                    console.log('Успешный ответ:', data);
+                                })
+                                .catch(error => {
+                                    console.error('Ошибка при выполнении запроса:', error);
+                                });
+
+                        });
+
+
+                        // console.log('executorsId');
+                        // console.log(executors);
+
+                        function getEmployee(exec) {
+                            // Формируем URL для запроса сотрудника
+                            const urlEmployee = `http://localhost:8080/employee/get-employee-by-id?id=${exec}`;
 
                             // Выполняем GET запрос с использованием fetch
-                            var jData = '';
-                            fetch(url)
+                            fetch(urlEmployee)
                                 .then(response => {
                                     // Проверяем успешность запроса
                                     if (!response.ok) {
@@ -212,87 +214,174 @@
                                     // Преобразуем полученный ответ в JSON
                                     return response.json();
                                 })
-                                .then(data => {
+                                .then(dataEmployee => {
                                     // Обрабатываем полученные данные (предполагается, что сервер вернул JSON с полями имя, фамилия, роль)
-                                    const { 
-                                        id:id,
-                                        name:name,
-                                        surname:surname,
-                                        employmentDate:employmentDate,
-                                        jobTitle:jobTitle,
-                                        department:department,
-                                        authentication:authentication,
-                                        humanId:humanId,
-                                        role:role
+                                    
+                                    const {
+                                        id: id,
+                                        name: name,
+                                        surname: surname,
+                                        employmentDate: employmentDate,
+                                        jobTitle: jobTitle,
+                                        department: department,
+                                        authentication: authentication,
+                                        humanId: humanId,
+                                        role: role
+                                    } = dataEmployee;
 
-                                    } = data;
-                                    // Делаем что-то с полученными данными, например, выводим в консоль
-                                    console.log(data);
-                                    jData = JSON.stringify(data);
-                                    console.log(`${id}, Имя: ${name}, Фамилия: ${surname}, Роль: ${role}, ${authentication}`);
-                                })
-                                .catch(error => {
-                                    // Ловим ошибки, если таковые возникли
-                                    console.error('Ошибка при выполнении запроса:', error);
+                                    var empl = dataEmployee;
+                                    console.log('enter employee');
+                                    console.log(empl);
+                                    return empl.textContent;
                                 });
+                        };
 
-                            // Отправляем POST-запрос на сервер
-                            // fetch('http://localhost:8080/tasks/add-task', {
-                            //     method: 'POST',
-                            //     body: formData
-                            // })
-                            console.log(nameTask + ' 1');
-                            console.log(customerId + ' 2');
-                            // console.log(JSON.stringify(empl) + ' 3');
-                            console.log(fileId + ' 4');
+                        // console.log('fileId');
+                        // console.log(fileId);
 
-                            console.log(({
-                                "fileId": fileId,
-                                "nameTask": nameTask,
-                                "authorTask": "",
-                                "customerId": customerId,
-                                // "executors": empl,
-                                "deadLine": ""
-                            }))
+                        function getFileDB(fId) {
+                            // Формируем URL для запроса сотрудника
+                            const urlMyFileDB = `http://localhost:8080/files/get-file-by-id?id=${fId}`;
 
-                            fetch('http://localhost:8080/tasks/add-task', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    fileId: fileId,
-                                    nameTask: nameTask,
-                                    authorTask: "",
-                                    customerId: customerId,
-                                    executors: [
-                                        {jData}
-                                    ]
-                                    ,
-                                    deadLine: ""
-                                })
-                            })
+                            // Выполняем GET запрос с использованием fetch
+                            fetch(urlMyFileDB)
                                 .then(response => {
+                                    // Проверяем успешность запроса
                                     if (!response.ok) {
-                                        throw new Error('Ошибка HTTP ' + response.status);
+                                        throw new Error(`HTTP error! Status: ${response.status}`);
                                     }
+                                    // Преобразуем полученный ответ в JSON
                                     return response.json();
                                 })
-                                .then(data => {
-                                    console.log('Задача успешно создана:', data);
-                                    // Опционально: добавить здесь логику для обработки успешного создания задачи
-                                })
-                                .catch(error => {
-                                    console.error('Ошибка при создании задачи:', error);
-                                    // Опционально: добавить здесь логику для обработки ошибок при создании задачи
+                                .then(dataMyFileDB => {
+                                    // Обрабатываем полученные данные (предполагается, что сервер вернул JSON с полями имя, фамилия, роль)
+                                    const {
+                                        id: id,
+                                        nameFile: nameFile,
+                                        surname: surname,
+                                        size: size,
+                                        typeFile: typeFile,
+                                        dateOfChange: dateOfChange,
+                                        pathToStorage: pathToStorage,
+                                    } = dataMyFileDB;
+
+                                    var myF = dataMyFileDB;
+                                    console.log('enter myFileDB');
+                                    console.log(myF);
+                                    return myF;
                                 });
+                        };
 
-                            // Опционально: очистка формы после отправки
-                            this.reset();
-                        });
 
-                        // });
                     </script>
+
+                    // window.onload = function () {
+                    // fetch('http://localhost:8080/files/all-files')
+                    // .then(response => response.json())
+                    // .then(data => {
+                    // const fileList = document.getElementById('fileId');
+                    // data.forEach(file => {
+                    // const option = document.createElement('option');
+                    // option.value = file.id; // Здесь предполагается, что у файла есть уникальный идентификатор
+                    // option.textContent = file.nameFile; // Предположим, что у файла есть поле "name"
+                    // fileList.appendChild(option);
+                    // });
+                    // })
+                    // .catch(error => console.error('Ошибка при загрузке списка файлов:', error));
+                    // };
+
+                    // JavaScript для обработки отправки формы
+                    // let form = document.getElementById('taskForm');
+                    // form.addEventListener('click', function (event) {
+                    // event.preventDefault(); // Предотвращаем отправку формы по умолчанию
+
+                    // // Дополнительная логика обработки данных формы, если нужно
+
+                    // // Пример вывода данных в консоль
+                    // console.log('12345', {
+                    // nameTask: this.nameTask.value,
+                    // customerId: this.customerId.value,
+                    // executors: this.executors.value,
+                    // fileId: this.fileId.value,
+                    // });
+                    // JavaScript для обработки отправки формы
+
+
+                    // // Делаем что-то с полученными данными, например, выводим в консоль
+                    // console.log('employee');
+                    // console.log(data);
+                    // jData = data;
+                    // jd = {
+                    // fileId: fileId,
+                    // nameTask: nameTask,
+                    // authorTask: executors,
+                    // customerId: customerId,
+                    // executors: {
+                    // employee
+                    // },
+                    // deadLine: deadLine
+                    // }
+                    // console.log(jd);
+
+                    // const urlAddTask = `http://localhost:8080/tasks/add-task`;
+                    // fetch(urlAddTask, {
+                    // method: 'POST',
+                    // headers: {
+                    // // 'ContentType': 'application/json',
+                    // // 'Accept': 'application/json'
+                    // 'Content-Type': 'application/json'
+                    // },
+                    // body: JSON.stringify(jd)
+                    // })
+                    // .then(response => {
+                    // if (!response.ok) {
+                    // throw new Error('Ошибка HTTP ' + response.status);
+                    // }
+                    // return response.json();
+                    // })
+                    // .then(data => {
+                    // console.log('Задача успешно создана:', data);
+                    // // Опционально: добавить здесь логику для обработки успешного создания задачи
+                    // })
+                    // .catch(error => {
+                    // console.error('Ошибка при создании задачи:', error);
+                    // // Опционально: добавить здесь логику для обработки ошибок при создании задачи
+                    // });
+
+                    // // Опционально: очистка формы после отправки
+                    // this.reset();
+
+
+                    // // console.log(`${id}, Имя: ${name}, Фамилия: ${surname}, Роль: ${role}, ${authentication}`);
+                    // // })
+                    // // .catch(error => {
+                    // // // Ловим ошибки, если таковые возникли
+                    // // console.error('Ошибка при выполнении запроса:', error);
+                    // // });
+
+                    // // // Отправляем POST-запрос на сервер
+                    // // // fetch('http://localhost:8080/tasks/add-task', {
+                    // // // method: 'POST',
+                    // // // body: formData
+                    // // // })
+                    // // console.log(nameTask + ' 1');
+                    // // console.log(customerId + ' 2');
+                    // // // console.log(JSON.stringify(empl) + ' 3');
+                    // // console.log(fileId + ' 4');
+
+                    // // console.log(({
+                    // // "fileId": fileId,
+                    // // "nameTask": nameTask,
+                    // // "authorTask": authorTask,
+                    // // "customerId": customerId,
+                    // // // "executors": empl,
+                    // // "deadLine": deadLine
+                    // // }))
+
+
+                    // });
+
+                    // });
                 </div>
             </div>
             <!-- <h3>Добавление файла</h3>

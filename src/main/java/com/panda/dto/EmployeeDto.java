@@ -2,7 +2,6 @@ package com.panda.dto;
 
 import com.panda.enums.JobTitle;
 import com.panda.enums.Role;
-import com.panda.model.Authentication;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,6 +33,4 @@ public class EmployeeDto {
     private UUID humanId;
 
     private Role role;
-
-//    private Boolean access;//доступ
 }

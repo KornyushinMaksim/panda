@@ -30,20 +30,14 @@ public class FileToDataBaseController {
         fileToDataBaseService.uploadFile(multipartFile, employeeId);
     }
 
-//    @PostMapping("/update-file")
-//    public byte[] updateFile(@RequestParam("fileId") UUID fileId,   //????
-//                             @RequestParam("employeeId") UUID employeeId) {
-//        return fileToDataBaseService.updateFile(fileId, employeeId);
-//    }
-
-    @GetMapping("/download-file")
-    public void downloadFile(@RequestParam UUID id
-                                , HttpServletResponse response
-    ) {   //!!!
+    @GetMapping("/download-file/{id}")
+    public void downloadFile(@PathVariable UUID id,
+                             HttpServletResponse response
+    ) {
         fileToDataBaseService.downloadFile(id, response);
     }
 
-    @GetMapping("/file-info")
+    @GetMapping("/get-file-by-id")
     public FileToDataBaseDto getFileById(@RequestParam UUID id) {
         return fileToDataBaseService.getFileById(id);
     }

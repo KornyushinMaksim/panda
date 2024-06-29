@@ -1,7 +1,6 @@
 package com.panda.service;
 
 import com.panda.dto.EmployeeDto;
-import com.panda.dto.EmployeeDto;
 import com.panda.mapper.EmployeeMapper;
 import com.panda.model.Employee;
 import com.panda.repository.EmployeeRepository;
@@ -87,8 +86,4 @@ public class EmployeeService {
                 .map(Optional::get)
                 .collect(Collectors.toSet());
     }
-
-//    public Optional<Employee> findEmployeeByAuthenticationUsername(String username) {
-//        return employeeRepository.findEmployeeByAuthenticationLogin(username);
-//    }
 }

@@ -1,7 +1,8 @@
 package com.panda.service;
 
 import com.panda.dto.FileToDataBaseDto;
-import com.panda.mapper.EmployeeMapper;import com.panda.mapper.FileToDataBaseMapper;
+import com.panda.mapper.EmployeeMapper;
+import com.panda.mapper.FileToDataBaseMapper;
 import com.panda.model.FileToDataBase;
 import com.panda.repository.FileToDataBaseRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -68,12 +69,6 @@ public class FileToDataBaseService {
         }
     }
 
-//    @Transactional
-//    public void openFileById(UUID id) {
-//
-//        String path = getById(id).getPathToStorage();
-//    }
-
     /**
      * скачивание файлов из хранилища на комп
      * принимает id, по которому получает путь хранения нужного файла
@@ -91,32 +86,18 @@ public class FileToDataBaseService {
         String nameFileTypeFile = fileToDataBaseDto.getNameFile();
         System.out.println(filePath);
         byte[] encodedFile = null;
-//        OutputStream out = response.getOutputStream();
 
         try (OutputStream out = response.getOutputStream()) {
             encodedFile = Files.readAllBytes(Paths.get(filePath));
-//            response.setHeader("Content-Disposition","inline");     //отображение файла в браузере
             response.setHeader("Content-Disposition", "Attachment; fileName=" + nameFileTypeFile);    //скачивание файла на пк
             out.write(encodedFile);
 
             fileToDataBase.setIsActive(true);
 
             fileToDataBaseRepository.save(fileToDataBase);
-
-//            Files.write(Paths.get(nameFile), Base64.getDecoder().decode(encodedFile));
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        finally {
-//            try {
-//                out.close();
-//            } catch (IOException o) {
-//                o.printStackTrace();
-//            }
-
-//        }
-//
-//        return encodedFile;
     }
 
     /**
