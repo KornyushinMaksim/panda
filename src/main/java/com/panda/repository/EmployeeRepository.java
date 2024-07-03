@@ -1,5 +1,6 @@
 package com.panda.repository;
 
+import com.panda.dto.EmployeeDto;
 import com.panda.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
 //                        WHERE e.employee_id = a.employee_id
 //            """)
     Optional<Employee> findEmployeeByAuthenticationLogin(String login);
+
+//    @Query("FROM Employees e JOIN FETCH e.role WHERE e.name = :name")
+    Optional<Employee> findByName(String name);
+
 }

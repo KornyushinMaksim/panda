@@ -41,7 +41,7 @@ public class FileTask {
 
 //    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_task")
-    private UUID authorTask;
+    private String authorTask;
 
 //   @OneToMany(mappedBy = "fileTaskId")
 //   private List<Comment> comments;

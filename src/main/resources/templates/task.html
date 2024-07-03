@@ -34,7 +34,7 @@
                         <input type="text" placeholder="Искать">
                         <button class="search">Поиск</button>
                     </div>
-                    <div class="headerProfile">
+                    <div id="" class="headerProfile">
                         <select name="">
                             <option value="profile">Профиль</option>
                             <option value="login">Войти</option>
@@ -76,7 +76,7 @@
 
                                 // Здесь можно выполнить запрос на сервер для получения подробной информации о задаче по её ID
                                 // Пример запроса
-                                fetch(`http://localhost:8080/tasks/get-task-by-id/${taskId}`)
+                                fetch(`http://localhost:8080/api/v1/tasks/get-task-by-id/${taskId}`)
                                     .then(response => response.json())
                                     .then(data => {
 
@@ -89,7 +89,7 @@
 
                                         let loadBtn = document.getElementById('load');
                                         loadBtn.innerHTML = `
-                                            <a href=http://localhost:8080/files/download-file/${data.fileId} download >
+                                            <a href=http://localhost:8080/api/v1/files/download-file/${data.fileId} download >
                                                 <button >Скачать файл</button>
                                             </a>
                                             `;

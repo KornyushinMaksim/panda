@@ -6,6 +6,11 @@ import com.panda.model.Employee;
 import com.panda.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -86,4 +91,31 @@ public class EmployeeService {
                 .map(Optional::get)
                 .collect(Collectors.toSet());
     }
+
+//    public EmployeeDto getCurrent() {
+//        SecurityContext context = SecurityContextHolder.getContext();
+//        Authentication authentication = context.getAuthentication();
+//        Object principal = authentication.getPrincipal();
+//
+//        System.out.println(principal.toString() + "principal");
+//
+//        if (principal instanceof UserDetails) {
+//            UserDetails userDetails = (UserDetails) principal;
+//            String name = userDetails.getUsername();
+//
+//            System.out.println(name + " name principal");
+//
+//            return employeeRepository.findByName(name)
+//                    .map(employeeMapper::toDto)
+//                    .orElseThrow(() -> new UsernameNotFoundException("Пользователь с указанным username не найден"));
+//        }
+//
+//        return null;
+//
+//    }
+
+//    public EmployeeDto getEmployeeByNickname(String nickname) {
+//        Employee entity = employeeRepository.getNickname(nickname).orElseThrow();
+//        return employeeMapper.toDto(entity);
+//    }
 }

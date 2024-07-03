@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class AuthEmployee implements UserDetails {
@@ -32,6 +33,7 @@ public class AuthEmployee implements UserDetails {
     @Override
     public String getUsername() {
         System.out.println("getUsername");
+        System.out.println("getUsername" + employee.getAuthentication().getLogin());
 
         return employee.getAuthentication().getLogin();
     }
@@ -55,4 +57,5 @@ public class AuthEmployee implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

@@ -10,6 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface AuthenticationRepository extends JpaRepository<Authentication, UUID> {
+    Optional<Authentication> findByLogin(String login);
 //
 //    Optional<Authentication> findAuthenticationByEmployeeId(UUID id);
 //

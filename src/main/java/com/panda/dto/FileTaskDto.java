@@ -21,7 +21,7 @@ public class FileTaskDto {
 
     private FileToDataBaseDto fileId;
 
-    private UUID authorTask;
+    private String authorTask;
 
     private UUID customerId;
 

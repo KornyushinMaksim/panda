@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/human")
+@RequestMapping("/api/v1/humans")
 public class HumanController {
 
     private final HumanService humanService;

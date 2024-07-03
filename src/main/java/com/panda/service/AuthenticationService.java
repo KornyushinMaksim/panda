@@ -76,11 +76,12 @@ public class AuthenticationService {
 
     /**
      * получение аутентификации по id(optional)
-     * @param id
+     * @param login
      * @return
      */
-    public Optional<Authentication> getById(UUID id) {
-        return authenticationRepository.findById(id);
+    public UUID getEmployeeIdByLogin(String login) {
+        Authentication entity = authenticationRepository.findByLogin(login).orElseThrow();
+        return entity.getEmployeeId();
     }
 
 }

@@ -70,10 +70,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/", "/lo", "/static/**").permitAll()
-//                        .requestMatchers("/admin", "tasksAdmin").hasRole("ADM")
-//                        .requestMatchers("/tasks/**", "/files/**").hasAnyRole("ADM", "USR")
-                        .anyRequest().permitAll()
+                        .requestMatchers("/", "/lo", "/static/**", "/currents/**").permitAll()
+                        .requestMatchers("/admin", "/tasksAdmin").hasRole("ADM")
+                        .requestMatchers("/tasks/**", "/files/**").hasAnyRole("ADM", "USR")
+                        .anyRequest().authenticated()
                 )
                 .formLogin(securityFormLoginConfigurer -> securityFormLoginConfigurer
                         .loginPage("/lo")

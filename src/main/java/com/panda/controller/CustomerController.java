@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/customers")
+@RequestMapping("/api/v1/customers")
 public class CustomerController {
 
     private final CustomerService customerService;

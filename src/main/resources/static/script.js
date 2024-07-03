@@ -26,7 +26,7 @@ function close() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    fetch('http://localhost:8080/tasks/all-tasks')
+    fetch('http://localhost:8080/api/v1/tasks/all-tasks')
         .then(response => response.json())
         .then(data => {
             const tasksTableBody = document.getElementById('tasksTableBody');

@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auths")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;

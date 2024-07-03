@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/files")
+@RequestMapping("/api/v1/files")
 public class FileToDataBaseController {
 
     private final FileToDataBaseService fileToDataBaseService;

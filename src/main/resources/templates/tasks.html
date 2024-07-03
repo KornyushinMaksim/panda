@@ -34,7 +34,9 @@
                         <input type="text" placeholder="Искать">
                         <button class="search">Поиск</button>
                     </div>
-                    <div class="headerProfile">
+                </div>
+                <div>
+                    <div id="headerProfile" class="headerProfile">
                         <select name="" id="">
                             <option value="profile">Профиль</option>
                             <option value="login">Войти</option>
@@ -84,8 +86,12 @@
                             <input type="text" id="customerId" name="customerId">
                         </div>
                         <div class="form-group">
-                            <label for="deadLine">Заказчик:</label>
+                            <label for="deadLine">Deadline:</label>
                             <input type="date" id="deadLine" name="deadLine">
+                        </div>
+                        <div class="form-group">
+                            <label hidden for="authorTask">authorTask:</label>
+                            <input hidden type="date" id="authorTask" name="authorTask">
                         </div>
                         <div class="form-group">
                             <label for="executors">Исполнители:</label>
@@ -105,6 +111,36 @@
 
                     <script>
 
+                        var employeeDto = fetch('http://localhost:8080/api/v1/currents/current-employee-id');
+                        console.log(employeeDto);
+                        var e = '';
+                        employeeDto.then(data => {e = data.json()});
+                        console.log(e);
+                        var obj = new Promise((resolve, reject) => {
+                            data => {
+                                console.log(data.then());
+                                resolve(data);
+                            }
+                        })
+                        obj.then(data => {
+                            console.log(data);
+                        });
+                        console.log(obj);
+
+
+                        //загрузка данных о залогированном пользователе
+                        // async function loadDataAuthEmployee() {
+                        //     // const url = 'http://localhost:8080/api/v1/currents/current';
+
+                        //     fetch('http://localhost:8080/api/v1/currents/current')
+                        //            .then(response => response.json())
+                        //            .then(userDetails => {
+                        //                console.log(userDetails.username);
+                        //            })
+                        //            .catch(error => {
+                        //                console.error('Ошибка при получении данных о пользователе:', error);
+                        //            });
+                        //     }
                         // Загрузка списка файлов с сервера
                         async function loadDataAndPopulateDropdown(url, dropdownId) {
                             try {
@@ -132,8 +168,10 @@
 
                         // Загрузка данных с сервера и заполнение выпадающих списков при загрузке страницы
                         document.addEventListener('DOMContentLoaded', () => {
-                            loadDataAndPopulateDropdown('http://localhost:8080/employee/get-all-employees', 'executors');
-                            loadDataAndPopulateDropdown('http://localhost:8080/files/all-files', 'fileId');
+                            loadDataAndPopulateDropdown('http://localhost:8080/api/v1/employees/get-all-employees', 'executors');
+                            loadDataAndPopulateDropdown('http://localhost:8080/api/v1/files/all-files', 'fileId');
+                            // loadDataAuthEmployee();
+                            // console.log(authorTask);
                         });
 
                         document.getElementById('taskForm').addEventListener('submit', function (event) {
@@ -145,54 +183,127 @@
                             const executors = document.getElementById('executors').value;
                             const fileId = document.getElementById('fileId').value;
                             const deadLine = document.getElementById('deadLine').value;
+                            // const authorTask = document.getElementById('authorTask').value;
+                            // console.log(authorTask);
 
 
-                            const employee = getEmployee(executors);
-                            const myFileDB = getFileDB(fileId);
-                            console.log('empl');
-                            console.log(employee);
-                            console.log('mf');
-                            console.log(myFileDB);
+                            // const employee = getEmployee(executors);
+                            // const myFileDB = getFileDB(fileId).then();
+                            // console.log('empl');
+                            // console.log(executors);
+                            // console.log(employee);
+                            // console.log('mf');
+                            // console.log(myFileDB);
 
-                            // Данные о задаче, которые нужно отправить на сервер
-                            const taskData = {
-                                fileId: {
-                                    myFileDB
-                                },
-                                nameTask: nameTask,
-                                authorTask: '',
-                                customerId: customerId,
-                                executors: {
-                                    employee
-                                },
-                                deadLine: deadLine,
-                            };
+                            // const id='';
+                            // const name = '';
+                            // const surname = '';
+                            // const employmentDate = '';
+                            // const jobTitle = '';
+                            // const department = '';
+                            // const authentication = '';
+                            // const humanId = '';
+                            // const role = '';
+
+                            // const urlEmployee = `http://localhost:8080/employee/get-employee-by-id?id=${executors}`;
+
+                            // // Выполняем GET запрос с использованием fetch
+                            // try {
+                            //     const response = axios.get(urlEmployee);
+                            //     const data = response.data;
+
+                            //     id = data.id;
+                            //     name = data.name;
+                            //     surname = data.surname;
+                            //     employmentDate =data.employmentDate;
+                            //     jobTitle = data.jobTitle;
+                            //     department = data.department;
+                            //     authentication = data.authentication;
+                            //     humanId = data.humanId;
+                            //     role = data.role;
+                            //     console.log(name, surname);
+                            // }
+                            // catch (error) {
+                            //     console.error('Ошибка при загрузке данных:', error);
+                            // }
+
+
+                            fetch('http://localhost:8080/api/v1/currents/current-employee-id')
+                                .then(response => response.json())
+                                .then(userDetails => {
+                                    const authorTask = `${userDetails.name} ${userDetails.surname}`;
+                                    console.log(userDetails);
+                                    console.log(authorTask);
+
+                                    // Данные о задаче, которые нужно отправить на сервер
+                                    const taskData = getEmployee(executors, fileId, nameTask, authorTask, customerId, deadLine);
+                                    taskData.then(data => {
+                                        console.log(data)
+                                        const urlTaskData = 'http://localhost:8080/api/v1/tasks/add-task';
+
+                                        // Формирование POST запроса с использованием Fetch API
+                                        fetch(urlTaskData, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json', // Указываем тип содержимого (JSON)
+                                            },
+                                            body: JSON.stringify(data) // Преобразуем объект в JSON строку для отправки
+                                        })
+                                            .then(response => {
+                                                if (!response.ok) {
+                                                    throw new Error('Network response was not ok');
+                                                }
+                                                return response.json(); // Разбираем JSON ответ в JavaScript объект
+                                            })
+                                            .then(data => {
+                                                console.log('Успешный ответ:', data);
+                                            })
+                                            .catch(error => {
+                                                console.error('Ошибка при выполнении запроса:', error);
+                                            });
+
+                                    });
+
+
+                                })
+                                .catch(error => {
+                                    console.error('Ошибка при получении данных о пользователе:', error);
+                                });
+
+
+
+                            // // Данные о задаче, которые нужно отправить на сервер
+                            // const taskData = getEmployee(executors, fileId, nameTask, authorTask, customerId, deadLine);
+                            // taskData.then(data => {
+                            //     console.log(data)
+                            //     const urlTaskData = 'http://localhost:8080/api/v1/tasks/add-task';
+
+                            //     // Формирование POST запроса с использованием Fetch API
+                            //     fetch(urlTaskData, {
+                            //         method: 'POST',
+                            //         headers: {
+                            //             'Content-Type': 'application/json', // Указываем тип содержимого (JSON)
+                            //         },
+                            //         body: JSON.stringify(data) // Преобразуем объект в JSON строку для отправки
+                            //     })
+                            //         .then(response => {
+                            //             if (!response.ok) {
+                            //                 throw new Error('Network response was not ok');
+                            //             }
+                            //             return response.json(); // Разбираем JSON ответ в JavaScript объект
+                            //         })
+                            //         .then(data => {
+                            //             console.log('Успешный ответ:', data);
+                            //         })
+                            //         .catch(error => {
+                            //             console.error('Ошибка при выполнении запроса:', error);
+                            //         });
+
+                            // });
                             console.log('enter taskData');
                             console.log(taskData);
 
                             // URL сервера, куда отправляем запрос
-                            const urlTaskData = 'http://localhost:8080/tasks/add-task';
-
-                            // Формирование POST запроса с использованием Fetch API
-                            fetch(urlTaskData, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json', // Указываем тип содержимого (JSON)
-                                },
-                                body: JSON.stringify(taskData) // Преобразуем объект в JSON строку для отправки
-                            })
-                                .then(response => {
-                                    if (!response.ok) {
-                                        throw new Error('Network response was not ok');
-                                    }
-                                    return response.json(); // Разбираем JSON ответ в JavaScript объект
-                                })
-                                .then(data => {
-                                    console.log('Успешный ответ:', data);
-                                })
-                                .catch(error => {
-                                    console.error('Ошибка при выполнении запроса:', error);
-                                });
 
                         });
 
@@ -200,77 +311,130 @@
                         // console.log('executorsId');
                         // console.log(executors);
 
-                        function getEmployee(exec) {
+                        async function getEmployee(exec, fId, nameTask, authorTask, customerId, deadLine) {
                             // Формируем URL для запроса сотрудника
-                            const urlEmployee = `http://localhost:8080/employee/get-employee-by-id?id=${exec}`;
+                            const urlEmployee = `http://localhost:8080/api/v1/employees/get-employee-by-id?id=${exec}`;
+                            const urlMyFileDB = `http://localhost:8080/api/v1/files/get-file-by-id?id=${fId}`;
 
                             // Выполняем GET запрос с использованием fetch
-                            fetch(urlEmployee)
-                                .then(response => {
-                                    // Проверяем успешность запроса
-                                    if (!response.ok) {
-                                        throw new Error(`HTTP error! Status: ${response.status}`);
-                                    }
-                                    // Преобразуем полученный ответ в JSON
-                                    return response.json();
-                                })
-                                .then(dataEmployee => {
-                                    // Обрабатываем полученные данные (предполагается, что сервер вернул JSON с полями имя, фамилия, роль)
-                                    
-                                    const {
-                                        id: id,
-                                        name: name,
-                                        surname: surname,
-                                        employmentDate: employmentDate,
-                                        jobTitle: jobTitle,
-                                        department: department,
-                                        authentication: authentication,
-                                        humanId: humanId,
-                                        role: role
-                                    } = dataEmployee;
+                            try {
+                                const responseEmployee = await axios.get(urlEmployee);
+                                const responseFile = await axios.get(urlMyFileDB);
+                                // const dataEmployee =
+                                // {
+                                //     id: response.data.id,
+                                //     name: response.data.name,
+                                //     surname: response.data.surname,
+                                //     employmentDate: response.data.employmentDate,
+                                //     jobTitle: response.data.jobTitle,
+                                //     department: response.data.department,
+                                //     authentication: response.data.authentication,
+                                //     humanId: response.data.humanId,
+                                //     role: response.data.role
+                                // };
 
-                                    var empl = dataEmployee;
-                                    console.log('enter employee');
-                                    console.log(empl);
-                                    return empl.textContent;
-                                });
+                                const taskData = {
+                                    fileId: {
+                                        id: responseFile.data.id,
+                                        nameFile: responseFile.data.nameFile,
+                                        size: responseFile.data.size,
+                                        typeFile: responseFile.data.typeFile,
+                                        dateOfChange: responseFile.data.dateOfChange,
+                                        pathToStorage: responseFile.data.pathToStorage,
+                                    },
+                                    nameTask: nameTask,
+                                    authorTask: authorTask,
+                                    customerId: customerId,
+                                    executors: [{
+                                        id: responseEmployee.data.id,
+                                        name: responseEmployee.data.name,
+                                        surname: responseEmployee.data.surname,
+                                        employmentDate: responseEmployee.data.employmentDate,
+                                        jobTitle: responseEmployee.data.jobTitle,
+                                        department: responseEmployee.data.department,
+                                        authentication: responseEmployee.data.authentication,
+                                        humanId: responseEmployee.data.humanId,
+                                        role: responseEmployee.data.role
+                                    }],
+                                    deadLine: deadLine,
+                                };
+
+
+                                // fetch(urlEmployee)
+                                //     .then(response => {
+                                //         // Проверяем успешность запроса
+                                //         if (!response.ok) {
+                                //             throw new Error(`HTTP error! Status: ${response.status}`);
+                                //         }
+                                //         // Преобразуем полученный ответ в JSON
+                                //         return response.json();
+                                //     })
+                                //     .then(dataEmployee => {
+                                //         // Обрабатываем полученные данные (предполагается, что сервер вернул JSON с полями имя, фамилия, роль)
+
+                                //         const {
+                                // id: id,
+                                // name: name,
+                                // surname: surname,
+                                // employmentDate: employmentDate,
+                                // jobTitle: jobTitle,
+                                // department: department,
+                                // authentication: authentication,
+                                // humanId: humanId,
+                                // role: role
+                                //         } = dataEmployee;
+
+                                console.log('enter employee');
+                                console.log(taskData);
+                                return taskData;
+                            }
+                            catch (error) {
+                                console.error('Ошибка при загрузке данных:', error);
+                            }
                         };
 
                         // console.log('fileId');
                         // console.log(fileId);
 
-                        function getFileDB(fId) {
-                            // Формируем URL для запроса сотрудника
-                            const urlMyFileDB = `http://localhost:8080/files/get-file-by-id?id=${fId}`;
+                        // async function getFileDB(fId) {
+                        //     // Формируем URL для запроса сотрудника
+                        //     const urlMyFileDB = `http://localhost:8080/files/get-file-by-id?id=${fId}`;
 
-                            // Выполняем GET запрос с использованием fetch
-                            fetch(urlMyFileDB)
-                                .then(response => {
-                                    // Проверяем успешность запроса
-                                    if (!response.ok) {
-                                        throw new Error(`HTTP error! Status: ${response.status}`);
-                                    }
-                                    // Преобразуем полученный ответ в JSON
-                                    return response.json();
-                                })
-                                .then(dataMyFileDB => {
-                                    // Обрабатываем полученные данные (предполагается, что сервер вернул JSON с полями имя, фамилия, роль)
-                                    const {
-                                        id: id,
-                                        nameFile: nameFile,
-                                        surname: surname,
-                                        size: size,
-                                        typeFile: typeFile,
-                                        dateOfChange: dateOfChange,
-                                        pathToStorage: pathToStorage,
-                                    } = dataMyFileDB;
+                        //     // Выполняем GET запрос с использованием fetch
+                        //     try {
+                        //         const response = await axios.get(urlMyFileDB);
+                        //         const dataMyFileDB = response.data;
 
-                                    var myF = dataMyFileDB;
-                                    console.log('enter myFileDB');
-                                    console.log(myF);
-                                    return myF;
-                                });
-                        };
+
+                        //         // fetch(urlMyFileDB)
+                        //         //     .then(response => {
+                        //         //         // Проверяем успешность запроса
+                        //         //         if (!response.ok) {
+                        //         //             throw new Error(`HTTP error! Status: ${response.status}`);
+                        //         //         }
+                        //         //         // Преобразуем полученный ответ в JSON
+                        //         //         return response.json();
+                        //         //     })
+                        //         //     .then(dataMyFileDB => {
+                        //         //         // Обрабатываем полученные данные (предполагается, что сервер вернул JSON с полями имя, фамилия, роль)
+                        //         //         const {
+                        //         // id: id,
+                        //         // nameFile: nameFile,
+                        //         // surname: surname,
+                        //         // size: size,
+                        //         // typeFile: typeFile,
+                        //         // dateOfChange: dateOfChange,
+                        //         // pathToStorage: pathToStorage,
+                        //         //         } = dataMyFileDB;
+
+                        //         console.log('enter myFileDB');
+                        //         console.log(dataMyFileDB);
+                        //         return dataMyFileDB;
+                        //     }
+                        //     catch (error) {
+                        //         console.error('Ошибка при загрузке данных:', error);
+                        //     }
+                        // };
 
 
                     </script>

@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/employee")
+@RequestMapping("/api/v1/employees")
 public class EmployeeController {
 
     public final EmployeeService employeeService;
@@ -30,5 +30,10 @@ public class EmployeeController {
 //        System.out.println(new Department().getEmployees());
         return employeeService.updateEmployee(employeeDto);
     }
+
+//    @GetMapping("/get-by-nickname")
+//    public EmployeeDto getEmployeeByNickname(@RequestBody String nickname) {
+//        return employeeService.getEmployeeByNickname(nickname);
+//    }
 }
 

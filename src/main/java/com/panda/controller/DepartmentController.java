@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/department")
+@RequestMapping("/api/v1/departments")
 public class DepartmentController {
 
     private final DepartmentService departmentService;
