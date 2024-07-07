@@ -35,7 +35,7 @@ public class SecurityConfig {
                             .getAuthorities());
 
             if (roles.contains("ROLE_ADM")) {
-                response.sendRedirect("/admin");
+                response.sendRedirect("/tasks");
                 return;
             }
 

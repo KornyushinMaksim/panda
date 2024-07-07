@@ -26,7 +26,7 @@ public class FileToDataBaseController {
 
     @PostMapping("/upload-file")
     public void uploadFile(@RequestParam("file") MultipartFile multipartFile,
-                           @RequestParam UUID employeeId) {
+                           @RequestParam("employeeId") UUID employeeId) {
         fileToDataBaseService.uploadFile(multipartFile, employeeId);
     }
 

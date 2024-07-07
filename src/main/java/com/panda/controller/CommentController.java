@@ -25,8 +25,8 @@ public class CommentController {
         return commentService.getCommentById(commentId);
     }
 
-    @GetMapping("/get-comments-by-file-task-id")
-    public List<CommentDto> getCommentsByFileTaskId(@RequestParam UUID fileTaskId) {
+    @GetMapping("/get-comments-by-file-task-id/{fileTaskId}")
+    public List<CommentDto> getCommentsByFileTaskId(@PathVariable UUID fileTaskId) {
         return commentService.getCommentsByFileTaskId(fileTaskId);
     }
 

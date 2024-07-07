@@ -63,141 +63,252 @@
                             </div>
 
                         </div>
-                        <div class="commitBtn">
-                            <button onclick="toggleVisibility()">Загрузить файл</button>
-                        </div>
 
-
-                        <script>
-
-                            document.addEventListener("DOMContentLoaded", function () {
-                                const urlParams = new URLSearchParams(window.location.search);
-                                const taskId = urlParams.get('id');
-
-                                // Здесь можно выполнить запрос на сервер для получения подробной информации о задаче по её ID
-                                // Пример запроса
-                                fetch(`http://localhost:8080/api/v1/tasks/get-task-by-id/${taskId}`)
-                                    .then(response => response.json())
-                                    .then(data => {
-
-
-                                        var execut = '';
-                                        var te = data.executors;
-                                        for (j = 0; j < te.length; j++) {
-                                            execut += `${te[j].name} ${te[j].surname}<br>`
-                                        };
-
-                                        let loadBtn = document.getElementById('load');
-                                        loadBtn.innerHTML = `
-                                            <a href=http://localhost:8080/api/v1/files/download-file/${data.fileId} download >
-                                                <button >Скачать файл</button>
-                                            </a>
-                                            `;
-
-
-                                        const taskDetailsDiv = document.getElementById('taskDetails');
-                                            console.log(data.fileId);
-                                        taskDetailsDiv.innerHTML = `
-                                    <h1> ${data.nameTask}</h1><br><br>
-                                        <div class="propertiesFileTitleBox">
-                                            <div class="logoFile" style="background:url(/images/typeFile/${data.fileId.typeFile}.png);
-                                             background-repeat: no-repeat;
-                                             background-size: cover;'">
-                                            </div>
-                                            <div class="propertiesFileInfoText">
-                                                <div class="propertiesFileInfoTextAuthor">
-                                                    <p>Исполнитель:</p>
-                                                    <div>${execut}</div>
-                                                </div><br>
-                                                <div class="propertiesFileInfoTextDate">
-                                                    <p>Заказчик: </p>
-                                                    <div>${data.customerId.nameOrg}</div>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                здесь будет примечание
-                                            </div>
-                                            <div class="propertiesFileDateInfo">
-                                                <p>дедлайн</p>
-                                                <div>${data.deadLine}</div>
-                                            </div>
-                                        </div>
-                                    `;
-                                    })
-                                    .catch(error => console.error('Ошибка получения данных о задаче:', error));
-                            });
-
-
-                        </script>
-                        <!-- // <p><strong>ID:</strong> ${data.id}</p>
-// <p><strong>Название файла:</strong> ${data.nameFile}</p>
-// <p><strong>Размер:</strong> ${data.size} байт</p>
-// <p><strong>Тип файла:</strong> ${data.typeFile}</p>
-// <p><strong>Дата изменения:</strong> ${data.dateOfChange}</p>
-// <p><strong>Путь к хранилищу:</strong> ${data.pathToStorage}</p> -->
-
-
-                        <!-- <h1 th:text="${data.nameFile}"></h1><br><br>
-                    <div class="propertiesFileTitleBox">
-                        <div class="logoFile" th:style="'background:url(' + @{/images/typeFile/{type}.png(type = ${data.typeFile})} +');
-                         background-repeat: no-repeat;
-                         background-size: cover;'">
-                        </div>
-                        <div class="propertiesFileInfoText">
-                            <div class="propertiesFileInfoTextAuthor">
-                                <p>Исполнитель:</p>
-                                <div th:text="fileId.author"></div>
-                            </div><br>
-                            <div class="propertiesFileInfoTextDate">
-                                <p>Заказчик: </p>
-                                <div>заказчик</div>
-                            </div>
-                        </div>
-                        <div>
-                            здесь будет примечание
-                        </div>
-                        <div class="propertiesFileDateInfo">
-                            <div th:text="${data.dateOfChange}"></div>
-                            <div>дедлайн</div>
-                        </div>
-                    </div> -->
                     </div>
                     <div class="commit">
                         <div class="commitBtn">
-                            <button onclick="toggleVisibility()">Добавить комментарий</button>
+                            <button onclick="toggleVisibility(document.getElementById('comment').id)">Добавить
+                                комментарий</button>
                         </div>
-                        <!-- <div class="comms">
-                        <div th:each="el : ${commits}" class="commits">
-                            <p th:text="${el.author} + '    ' + ${el.date}"></p>
-                            <div th:text="${el.commit}"></div>
-                            <br><br>
-                        </div>    
-                    </div> -->
                     </div>
                 </div>
 
-                <div id="docAdd" style="display: none;">
-                    <h3>Добавление комментария</h3>
+                <div id="comment" style="display: none;">
                     <div class="containerDocAdd">
-                        <form action="" method="post">
-                            <div th:type="number" name="idApplication" value="${fileStorage.id}"></div>
-                            <input type="text" name="author" value=fileStorage.author>
-
-                            <!--                        <div type="text" th:text="${fileStorage.author}" name="author"></div>      &lt;!&ndash;????????&ndash;&gt;-->
-                            <textarea name="commit" id="" cols="30" rows="10" placeholder="Комментарий"></textarea>
+                        <form id="commentForm">
+                            <textarea name="commit" id="commentText" cols="30" rows="10"
+                                placeholder="Комментарий"></textarea>
                             <div class="bottons">
-                                <button onclick="toggleVisibility()" type="submit" name="select"
-                                    value="add">Отправить</button>
-                                <button onclick="toggleVisibility()" type="submit" name="select"
+                                <button onclick="toggleVisibility(document.getElementById('comment').id)" type="submit"
+                                    name="select" value="add">Отправить</button>
+                                <button onclick="toggleVisibility(document.getElementById('comment').id),
+                                cancelMyFormComment(document.getElementById('comment').id)" type="submit" name="select"
                                     value="close">Отмена</button>
                             </div>
                         </form>
                     </div>
                 </div>
+
+                <div id="commentList">
+
+                </div>
             </div>
         </div>
     </div>
-    <!-- <script src="/script.js"></script> -->
+    <script>
+
+        let authEmployee;
+        let fileTaskData;
+
+        // Функция для выполнения запроса и получения данных
+        async function fetchData() {
+            return fetch('http://localhost:8080/api/v1/currents/current-employee-id')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Ошибка HTTP, статус ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // В этом блоке вы получаете данные и можете сделать с ними что-то нужное
+                    console.log('Данные получены:', data);
+                    authEmployee = data; // сохранение данных в глобальную переменную
+                    // checkRole(authEmployee);
+                })
+                .catch(error => {
+                    // Обработка ошибок
+                    console.error('Произошла ошибка:', error);
+                });
+        }
+
+        async function loadDataComments(commentTaskId) {
+            fetch(`http://localhost:8080/api/v1/comments/get-comments-by-file-task-id/${commentTaskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const commentBody = document.getElementById('commentList');
+
+                    data.forEach(commit => {
+                        const row = document.createElement('div');
+
+                        // // Создаем ссылку для каждой задачи
+                        // const link = document.createElement('a');
+                        // link.href = `task?id=${task.id}`; // Перенаправляем на страницу с подробной информацией о задаче
+                        // link.textContent = task.id;
+
+                        // const cellId = document.createElement('td');
+                        // cellId.appendChild(link);
+                        // row.appendChild(cellId);
+
+                        // Добавляем остальные данные в ячейки таблицы
+                        const commentText = document.createElement('div');
+                        commentText.textContent = commit.comment;
+                        row.appendChild(commentText);
+
+                        const commentAuthor = document.createElement('p');
+                        commentAuthor.textContent = `${commit.authorComment.name} ${commit.authorComment.surname}`;
+                        row.appendChild(commentAuthor);
+
+                        const commentCreateDate = document.createElement('p');
+                        commentCreateDate.textContent = commit.dateComment;
+                        row.appendChild(commentCreateDate);
+
+                        // Добавляем строку в тело таблицы
+                        if (row !== null) {
+                            commentBody.appendChild(row);
+                        }
+                    });
+                });
+        }
+
+
+        document.getElementById('commentForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const textarea = document.getElementById('commentText').value;
+            // console.log(fileTaskData);
+            // console.log(authEmployee);
+            const commentData = {
+                fileTaskId: fileTaskData,
+                authorComment: authEmployee,
+                comment: textarea,
+                dateComment: ''
+            }
+            const urlCommentData = 'http://localhost:8080/api/v1/comments/add-comment';
+            fetch(urlCommentData, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(commentData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Разбираем JSON ответ в JavaScript объект
+                })
+                .then(data => {
+                    console.log('Успешный ответ:', data);
+                })
+                .catch(error => {
+                    console.error('Ошибка при выполнении запроса:', error);
+                });
+            window.parent.location.reload();
+        })
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const taskId = urlParams.get('id');
+
+
+
+            // Здесь можно выполнить запрос на сервер для получения подробной информации о задаче по её ID
+            // Пример запроса
+            fetch(`http://localhost:8080/api/v1/tasks/get-task-by-id/${taskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    fileTaskData = data;
+                    console.log(fileTaskData);
+
+                    loadDataComments(data.id);
+
+
+                    var execut = '';
+                    var te = data.executors;
+                    for (j = 0; j < te.length; j++) {
+                        execut += `${te[j].name} ${te[j].surname}<br>`
+                    };
+
+
+                    // const taskData = getEmployee(executors, fileId, nameTask, authorTask, customerId, deadLine);
+                    // taskData.then(data => {
+                    //     console.log(data)
+                    //     const urlTaskData = 'http://localhost:8080/api/v1/tasks/add-task';
+
+                    //     // Формирование POST запроса с использованием Fetch API
+                    //     fetch(urlTaskData, {
+                    //         method: 'POST',
+                    //         headers: {
+                    //             'Content-Type': 'application/json', // Указываем тип содержимого (JSON)
+                    //         },
+                    //         body: JSON.stringify(data) // Преобразуем объект в JSON строку для отправки
+                    //     })
+                    //         .then(response => {
+                    //             if (!response.ok) {
+                    //                 throw new Error('Network response was not ok');
+                    //             }
+                    //             return response.json(); // Разбираем JSON ответ в JavaScript объект
+                    //         })
+                    //         .then(data => {
+                    //             console.log('Успешный ответ:', data);
+                    //         })
+                    //         .catch(error => {
+                    //             console.error('Ошибка при выполнении запроса:', error);
+                    //         });
+                    // });
+
+                    let loadBtn = document.getElementById('load');
+                    console.log('auhtemployee')
+                    console.log(authEmployee);
+                    loadBtn.innerHTML = `
+                        <a href=http://localhost:8080/api/v1/files/download-file/${data.fileId.id} download >
+                            <button >Скачать файл</button>
+                        </a>
+                        `;
+
+
+                    const taskDetailsDiv = document.getElementById('taskDetails');
+                    console.log(data.fileId);
+                    console.log(authEmployee);
+                    taskDetailsDiv.innerHTML = `
+                <h1> ${data.nameTask}</h1><br><br>
+                    <div class="propertiesFileTitleBox">
+
+                        <div class="propertiesFileInfoImage">
+                            <div class="logoFile" style="background:url(/images/typeFile/${data.fileId.typeFile}.png);
+                                background-repeat: no-repeat;
+                                background-size: cover;'">
+                            </div><br>
+                            <div>
+                                ${data.fileId.nameFile}
+                            </div>
+                        </div>
+
+                        <div class="propertiesFileInfoText">
+                            <div class="propertiesFileInfoTextAuthor">
+                                <p>Исполнитель:</p>
+                                <div>${execut}</div>
+                            </div><br>
+                            <div class="propertiesFileInfoTextDate">
+                                <p>Заказчик: </p>
+                                <div>${data.customerId.nameOrg}</div>
+                            </div><br>
+                            <div class="propertiesFileInfoAutor">
+                                <p>Заявку создал:</p>
+                                <div>${data.authorTask}</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            здесь будет примечание
+                        </div>
+
+                        <div class="propertiesFileDateInfo">
+                            <p>дедлайн</p>
+                            <div>${data.deadLine}</div>
+                        </div>
+
+                    </div>
+                `;
+                })
+                .catch(error => console.error('Ошибка получения данных о задаче:', error));
+        });
+        fetchData();
+
+    </script>
+
+    <script src="/script.js"></script>
 </body>
 
 </html>

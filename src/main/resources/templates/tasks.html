@@ -12,8 +12,8 @@
 <body>
     <div class="container">
         <!-- Header -->
-        <div class="header">
-            <div class="headerInner">
+        <div id="header" class="header">
+            <div id="headerInner" class="headerInner">
                 <a href="/">
                     <div class="logo">
                         <img src="/images/logo_panda.jpeg">
@@ -47,13 +47,21 @@
                     </div>
 
                 </div>
-
             </div>
+
+            <div id="admHead">
+            </div>
+
         </div>
 
         <!-- Body -->
         <div class="containerBody">
             <div class="table">
+                <button id="createTask" onclick="toggleVisibility(document.getElementById('add-task').id)">Добавить
+                    задачу</button>
+                <button id="uploadFile" onclick="toggleVisibility(document.getElementById('upload-file').id)">Загрузить
+                    файл
+                    в хранилище</button>
                 <table>
                     <thead>
                         <tr>
@@ -69,11 +77,27 @@
 
                     </tbody>
                 </table>
-                <button onclick="toggleVisibility()">Добавить</button>
-                <button onclick="toggleVisibility1()">открыть</button>
             </div>
 
-            <div id="docAdd" style="display: none;">
+            <div id="upload-file" style="display: none;">
+                <h3>Загрузка файла в хранилище</h3>
+                <div class="containerDocAdd">
+                    <form id="upload-file-form">
+                        <div class="form-group">
+                            <label for="file">Файл для загрузки:</label>
+                            <input type="file" id="file" name="file">
+                        </div>
+                        <button value="createTask"
+                            onclick="uploadFile(),
+                            toggleVisibility(document.getElementById('upload-file').id)">Загрузить
+                            файл</button>
+                        <button value="cancel" onclick="toggleVisibility(document.getElementById('upload-file').id),
+                            cancelMyForm(document.getElementById('upload-file').id)">Отмена</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="add-task" style="display: none;">
                 <h3>Создание заявки</h3>
                 <div class="containerDocAdd">
                     <form id="taskForm">
@@ -82,16 +106,14 @@
                             <input type="text" id="nameTask" name="nameTask">
                         </div>
                         <div class="form-group">
-                            <label for="customer">Заказчик:</label>
-                            <input type="text" id="customerId" name="customerId">
-                        </div>
-                        <div class="form-group">
                             <label for="deadLine">Deadline:</label>
                             <input type="date" id="deadLine" name="deadLine">
                         </div>
                         <div class="form-group">
-                            <label hidden for="authorTask">authorTask:</label>
-                            <input hidden type="date" id="authorTask" name="authorTask">
+                            <label for="customerId">Заказчик:</label>
+                            <select type="text" id="customerId" name="customerId">
+                                <option value="">Выберите файл</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="executors">Исполнители:</label>
@@ -105,44 +127,111 @@
                                 <option value="">Выберите файл</option>
                             </select>
                         </div>
-                        <button type="" onclick="toggleVisibility()">Создать задачу</button>
-                        <button type="" onclick="toggleVisibility()">Отменить создание</button>
+                        <button id="btn" value="createTask"
+                            onclick="toggleVisibility(document.getElementById('add-task').id)">Создать задачу</button>
+                        <button value="cancel" onclick="toggleVisibility(document.getElementById('add-task').id), 
+                            cancelMyForm(document.getElementById('taskForm').id)">Отменить
+                            создание</button>
                     </form>
 
                     <script>
 
-                        var employeeDto = fetch('http://localhost:8080/api/v1/currents/current-employee-id');
-                        console.log(employeeDto);
-                        var e = '';
-                        employeeDto.then(data => {e = data.json()});
-                        console.log(e);
-                        var obj = new Promise((resolve, reject) => {
-                            data => {
-                                console.log(data.then());
-                                resolve(data);
+                        // Глобальная переменная, в которую будут сохранены данные
+                        let authEmployee;
+
+                        //Загрузка файла на сервер
+                        function uploadFile() {
+                            alert('Получаем файл из input');
+                            // Получаем файл из input
+                            const fileInput = document.getElementById('file');
+                            alert(fileInput);
+                            console.log(fileInput);
+                            const file = fileInput.files[0];
+                            const employeeId = authEmployee.id;
+
+                            if (!file) {
+                                alert('Выберите файл для загрузки.');
+                                return;
                             }
-                        })
-                        obj.then(data => {
-                            console.log(data);
-                        });
-                        console.log(obj);
+
+                            // Создаем объект FormData
+                            const formData = new FormData();
+                            formData.append('file', file);
+                            formData.append('employeeId', employeeId);
+
+                            // Настройка запроса
+                            const xhr = new XMLHttpRequest();
+                            xhr.open('POST', 'http://localhost:8080/api/v1/files/upload-file', true);
+
+                            // Отправляем данные формы
+                            xhr.send(formData);
+
+                            // Обработка ответа от сервера
+                            xhr.onload = function () {
+                                if (xhr.status === 200) {
+                                    alert('Файл успешно загружен на сервер.');
+                                } else {
+                                    alert('Произошла ошибка при загрузке файла.');
+                                }
+                            };
+
+                            // Обработка ошибок при отправке запроса
+                            xhr.onerror = function () {
+                                alert('Произошла ошибка при отправке запроса на сервер.');
+                            };
+                        }
 
 
-                        //загрузка данных о залогированном пользователе
-                        // async function loadDataAuthEmployee() {
-                        //     // const url = 'http://localhost:8080/api/v1/currents/current';
+                        //Проверка роли
+                        function checkRole(dataempl) {
+                            const role = dataempl.role;
+                            console.log(role);
+                            if (role === 'ROLE_ADM') {
+                                console.log('проверка роли');
+                                const header = document.getElementById('admHead');
+                                console.log(header);
+                                header.innerHTML = `
+                                <div class="side-menu">
+                                    <div class="u">
+                                        <div class="l"><a href="/admin">Домой</a></div>
+                                        <div class="l"><a href="/tasksAdmin">Задачи</a></div>
+                                        <div class="l"><a href="#">Сотрудники</a></div>
+                                        <div class="l"><a href="#">Portfolio</a></div>
+                                        <div class="l"><a href="#">Contact</a></div>
+                                    </div>
+                                </div>
+                                `;
+                            }
+                        }
 
-                        //     fetch('http://localhost:8080/api/v1/currents/current')
-                        //            .then(response => response.json())
-                        //            .then(userDetails => {
-                        //                console.log(userDetails.username);
-                        //            })
-                        //            .catch(error => {
-                        //                console.error('Ошибка при получении данных о пользователе:', error);
-                        //            });
-                        //     }
-                        // Загрузка списка файлов с сервера
-                        async function loadDataAndPopulateDropdown(url, dropdownId) {
+                        // function cancelMyForm(idForm) {
+                        //     document.getElementById(idForm).reset();
+                        //     window.location.href = "/tasks";
+                        // }
+
+                        // Функция для выполнения запроса и получения данных
+                        function fetchData() {
+                            return fetch('http://localhost:8080/api/v1/currents/current-employee-id')
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Ошибка HTTP, статус ' + response.status);
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    // В этом блоке вы получаете данные и можете сделать с ними что-то нужное
+                                    console.log('Данные получены:', data);
+                                    authEmployee = data; // сохранение данных в глобальную переменную
+                                    checkRole(authEmployee);
+                                })
+                                .catch(error => {
+                                    // Обработка ошибок
+                                    console.error('Произошла ошибка:', error);
+                                });
+                        }
+
+                        // Загрузка списка сотрудников с сервера
+                        async function loadDataEmployees(url, dropdownId) {
                             try {
                                 const response = await axios.get(url);
                                 const data = response.data;
@@ -157,7 +246,58 @@
                                 data.forEach(item => {
                                     const option = document.createElement('option');
                                     option.value = item.id; // Предполагается, что каждый элемент имеет поле id
-                                    option.textContent = item.name; // Предполагается, что каждый элемент имеет поле name
+                                    option.textContent = `${item.name} ${item.surname}`; // Предполагается, что каждый элемент имеет поле name
+                                    dropdown.appendChild(option);
+                                });
+
+                            } catch (error) {
+                                console.error('Ошибка при загрузке данных:', error);
+                            }
+                        }
+
+
+                        // Загрузка списка файлов с сервера
+                        async function loadDataFile(url, dropdownId) {
+                            try {
+                                const response = await axios.get(url);
+                                const data = response.data;
+
+                                // Находим выпадающий список по его id
+                                const dropdown = document.getElementById(dropdownId);
+
+                                // Очищаем список от старых элементов
+                                dropdown.innerHTML = '<option value="">Выберите...</option>';
+
+                                // Добавляем новые элементы в список
+                                data.forEach(item => {
+                                    const option = document.createElement('option');
+                                    option.value = item.id; // Предполагается, что каждый элемент имеет поле id
+                                    option.textContent = item.nameFile; // Предполагается, что каждый элемент имеет поле name
+                                    dropdown.appendChild(option);
+                                });
+
+                            } catch (error) {
+                                console.error('Ошибка при загрузке данных:', error);
+                            }
+                        }
+
+                        // Загрузка списка заказчиков с сервера
+                        async function loadDataCustomer(url, dropdownId) {
+                            try {
+                                const response = await axios.get(url);
+                                const data = response.data;
+
+                                // Находим выпадающий список по его id
+                                const dropdown = document.getElementById(dropdownId);
+
+                                // Очищаем список от старых элементов
+                                dropdown.innerHTML = '<option value="">Выберите...</option>';
+
+                                // Добавляем новые элементы в список
+                                data.forEach(item => {
+                                    const option = document.createElement('option');
+                                    option.value = item.id; // Предполагается, что каждый элемент имеет поле id
+                                    option.textContent = item.nameOrg; // Предполагается, что каждый элемент имеет поле name
                                     dropdown.appendChild(option);
                                 });
 
@@ -168,10 +308,9 @@
 
                         // Загрузка данных с сервера и заполнение выпадающих списков при загрузке страницы
                         document.addEventListener('DOMContentLoaded', () => {
-                            loadDataAndPopulateDropdown('http://localhost:8080/api/v1/employees/get-all-employees', 'executors');
-                            loadDataAndPopulateDropdown('http://localhost:8080/api/v1/files/all-files', 'fileId');
-                            // loadDataAuthEmployee();
-                            // console.log(authorTask);
+                            loadDataEmployees('http://localhost:8080/api/v1/employees/get-all-employees', 'executors');
+                            loadDataFile('http://localhost:8080/api/v1/files/all-files', 'fileId');
+                            loadDataCustomer('http://localhost:8080/api/v1/customers/get-all-customers', 'customerId');
                         });
 
                         document.getElementById('taskForm').addEventListener('submit', function (event) {
@@ -183,55 +322,10 @@
                             const executors = document.getElementById('executors').value;
                             const fileId = document.getElementById('fileId').value;
                             const deadLine = document.getElementById('deadLine').value;
-                            // const authorTask = document.getElementById('authorTask').value;
-                            // console.log(authorTask);
-
-
-                            // const employee = getEmployee(executors);
-                            // const myFileDB = getFileDB(fileId).then();
-                            // console.log('empl');
-                            // console.log(executors);
-                            // console.log(employee);
-                            // console.log('mf');
-                            // console.log(myFileDB);
-
-                            // const id='';
-                            // const name = '';
-                            // const surname = '';
-                            // const employmentDate = '';
-                            // const jobTitle = '';
-                            // const department = '';
-                            // const authentication = '';
-                            // const humanId = '';
-                            // const role = '';
-
-                            // const urlEmployee = `http://localhost:8080/employee/get-employee-by-id?id=${executors}`;
-
-                            // // Выполняем GET запрос с использованием fetch
-                            // try {
-                            //     const response = axios.get(urlEmployee);
-                            //     const data = response.data;
-
-                            //     id = data.id;
-                            //     name = data.name;
-                            //     surname = data.surname;
-                            //     employmentDate =data.employmentDate;
-                            //     jobTitle = data.jobTitle;
-                            //     department = data.department;
-                            //     authentication = data.authentication;
-                            //     humanId = data.humanId;
-                            //     role = data.role;
-                            //     console.log(name, surname);
-                            // }
-                            // catch (error) {
-                            //     console.error('Ошибка при загрузке данных:', error);
-                            // }
-
-
                             fetch('http://localhost:8080/api/v1/currents/current-employee-id')
                                 .then(response => response.json())
                                 .then(userDetails => {
-                                    const authorTask = `${userDetails.name} ${userDetails.surname}`;
+                                    const authorTask = `${authEmployee.name} ${authEmployee.surname}`;
                                     console.log(userDetails);
                                     console.log(authorTask);
 
@@ -261,55 +355,14 @@
                                             .catch(error => {
                                                 console.error('Ошибка при выполнении запроса:', error);
                                             });
-
                                     });
-
-
                                 })
                                 .catch(error => {
                                     console.error('Ошибка при получении данных о пользователе:', error);
                                 });
 
-
-
-                            // // Данные о задаче, которые нужно отправить на сервер
-                            // const taskData = getEmployee(executors, fileId, nameTask, authorTask, customerId, deadLine);
-                            // taskData.then(data => {
-                            //     console.log(data)
-                            //     const urlTaskData = 'http://localhost:8080/api/v1/tasks/add-task';
-
-                            //     // Формирование POST запроса с использованием Fetch API
-                            //     fetch(urlTaskData, {
-                            //         method: 'POST',
-                            //         headers: {
-                            //             'Content-Type': 'application/json', // Указываем тип содержимого (JSON)
-                            //         },
-                            //         body: JSON.stringify(data) // Преобразуем объект в JSON строку для отправки
-                            //     })
-                            //         .then(response => {
-                            //             if (!response.ok) {
-                            //                 throw new Error('Network response was not ok');
-                            //             }
-                            //             return response.json(); // Разбираем JSON ответ в JavaScript объект
-                            //         })
-                            //         .then(data => {
-                            //             console.log('Успешный ответ:', data);
-                            //         })
-                            //         .catch(error => {
-                            //             console.error('Ошибка при выполнении запроса:', error);
-                            //         });
-
-                            // });
-                            console.log('enter taskData');
-                            console.log(taskData);
-
-                            // URL сервера, куда отправляем запрос
-
+                            this.reset();
                         });
-
-
-                        // console.log('executorsId');
-                        // console.log(executors);
 
                         async function getEmployee(exec, fId, nameTask, authorTask, customerId, deadLine) {
                             // Формируем URL для запроса сотрудника
@@ -320,19 +373,8 @@
                             try {
                                 const responseEmployee = await axios.get(urlEmployee);
                                 const responseFile = await axios.get(urlMyFileDB);
-                                // const dataEmployee =
-                                // {
-                                //     id: response.data.id,
-                                //     name: response.data.name,
-                                //     surname: response.data.surname,
-                                //     employmentDate: response.data.employmentDate,
-                                //     jobTitle: response.data.jobTitle,
-                                //     department: response.data.department,
-                                //     authentication: response.data.authentication,
-                                //     humanId: response.data.humanId,
-                                //     role: response.data.role
-                                // };
 
+                                console.log(`globalData ${authEmployee.name} ${authEmployee.surname}`)
                                 const taskData = {
                                     fileId: {
                                         id: responseFile.data.id,
@@ -359,33 +401,6 @@
                                     deadLine: deadLine,
                                 };
 
-
-                                // fetch(urlEmployee)
-                                //     .then(response => {
-                                //         // Проверяем успешность запроса
-                                //         if (!response.ok) {
-                                //             throw new Error(`HTTP error! Status: ${response.status}`);
-                                //         }
-                                //         // Преобразуем полученный ответ в JSON
-                                //         return response.json();
-                                //     })
-                                //     .then(dataEmployee => {
-                                //         // Обрабатываем полученные данные (предполагается, что сервер вернул JSON с полями имя, фамилия, роль)
-
-                                //         const {
-                                // id: id,
-                                // name: name,
-                                // surname: surname,
-                                // employmentDate: employmentDate,
-                                // jobTitle: jobTitle,
-                                // department: department,
-                                // authentication: authentication,
-                                // humanId: humanId,
-                                // role: role
-                                //         } = dataEmployee;
-
-                                console.log('enter employee');
-                                console.log(taskData);
                                 return taskData;
                             }
                             catch (error) {
@@ -393,159 +408,9 @@
                             }
                         };
 
-                        // console.log('fileId');
-                        // console.log(fileId);
-
-                        // async function getFileDB(fId) {
-                        //     // Формируем URL для запроса сотрудника
-                        //     const urlMyFileDB = `http://localhost:8080/files/get-file-by-id?id=${fId}`;
-
-                        //     // Выполняем GET запрос с использованием fetch
-                        //     try {
-                        //         const response = await axios.get(urlMyFileDB);
-                        //         const dataMyFileDB = response.data;
-
-
-                        //         // fetch(urlMyFileDB)
-                        //         //     .then(response => {
-                        //         //         // Проверяем успешность запроса
-                        //         //         if (!response.ok) {
-                        //         //             throw new Error(`HTTP error! Status: ${response.status}`);
-                        //         //         }
-                        //         //         // Преобразуем полученный ответ в JSON
-                        //         //         return response.json();
-                        //         //     })
-                        //         //     .then(dataMyFileDB => {
-                        //         //         // Обрабатываем полученные данные (предполагается, что сервер вернул JSON с полями имя, фамилия, роль)
-                        //         //         const {
-                        //         // id: id,
-                        //         // nameFile: nameFile,
-                        //         // surname: surname,
-                        //         // size: size,
-                        //         // typeFile: typeFile,
-                        //         // dateOfChange: dateOfChange,
-                        //         // pathToStorage: pathToStorage,
-                        //         //         } = dataMyFileDB;
-
-                        //         console.log('enter myFileDB');
-                        //         console.log(dataMyFileDB);
-                        //         return dataMyFileDB;
-                        //     }
-                        //     catch (error) {
-                        //         console.error('Ошибка при загрузке данных:', error);
-                        //     }
-                        // };
-
+                        fetchData();
 
                     </script>
-
-                    // window.onload = function () {
-                    // fetch('http://localhost:8080/files/all-files')
-                    // .then(response => response.json())
-                    // .then(data => {
-                    // const fileList = document.getElementById('fileId');
-                    // data.forEach(file => {
-                    // const option = document.createElement('option');
-                    // option.value = file.id; // Здесь предполагается, что у файла есть уникальный идентификатор
-                    // option.textContent = file.nameFile; // Предположим, что у файла есть поле "name"
-                    // fileList.appendChild(option);
-                    // });
-                    // })
-                    // .catch(error => console.error('Ошибка при загрузке списка файлов:', error));
-                    // };
-
-                    // JavaScript для обработки отправки формы
-                    // let form = document.getElementById('taskForm');
-                    // form.addEventListener('click', function (event) {
-                    // event.preventDefault(); // Предотвращаем отправку формы по умолчанию
-
-                    // // Дополнительная логика обработки данных формы, если нужно
-
-                    // // Пример вывода данных в консоль
-                    // console.log('12345', {
-                    // nameTask: this.nameTask.value,
-                    // customerId: this.customerId.value,
-                    // executors: this.executors.value,
-                    // fileId: this.fileId.value,
-                    // });
-                    // JavaScript для обработки отправки формы
-
-
-                    // // Делаем что-то с полученными данными, например, выводим в консоль
-                    // console.log('employee');
-                    // console.log(data);
-                    // jData = data;
-                    // jd = {
-                    // fileId: fileId,
-                    // nameTask: nameTask,
-                    // authorTask: executors,
-                    // customerId: customerId,
-                    // executors: {
-                    // employee
-                    // },
-                    // deadLine: deadLine
-                    // }
-                    // console.log(jd);
-
-                    // const urlAddTask = `http://localhost:8080/tasks/add-task`;
-                    // fetch(urlAddTask, {
-                    // method: 'POST',
-                    // headers: {
-                    // // 'ContentType': 'application/json',
-                    // // 'Accept': 'application/json'
-                    // 'Content-Type': 'application/json'
-                    // },
-                    // body: JSON.stringify(jd)
-                    // })
-                    // .then(response => {
-                    // if (!response.ok) {
-                    // throw new Error('Ошибка HTTP ' + response.status);
-                    // }
-                    // return response.json();
-                    // })
-                    // .then(data => {
-                    // console.log('Задача успешно создана:', data);
-                    // // Опционально: добавить здесь логику для обработки успешного создания задачи
-                    // })
-                    // .catch(error => {
-                    // console.error('Ошибка при создании задачи:', error);
-                    // // Опционально: добавить здесь логику для обработки ошибок при создании задачи
-                    // });
-
-                    // // Опционально: очистка формы после отправки
-                    // this.reset();
-
-
-                    // // console.log(`${id}, Имя: ${name}, Фамилия: ${surname}, Роль: ${role}, ${authentication}`);
-                    // // })
-                    // // .catch(error => {
-                    // // // Ловим ошибки, если таковые возникли
-                    // // console.error('Ошибка при выполнении запроса:', error);
-                    // // });
-
-                    // // // Отправляем POST-запрос на сервер
-                    // // // fetch('http://localhost:8080/tasks/add-task', {
-                    // // // method: 'POST',
-                    // // // body: formData
-                    // // // })
-                    // // console.log(nameTask + ' 1');
-                    // // console.log(customerId + ' 2');
-                    // // // console.log(JSON.stringify(empl) + ' 3');
-                    // // console.log(fileId + ' 4');
-
-                    // // console.log(({
-                    // // "fileId": fileId,
-                    // // "nameTask": nameTask,
-                    // // "authorTask": authorTask,
-                    // // "customerId": customerId,
-                    // // // "executors": empl,
-                    // // "deadLine": deadLine
-                    // // }))
-
-
-                    // });
-
-                    // });
                 </div>
             </div>
             <!-- <h3>Добавление файла</h3>
@@ -562,6 +427,7 @@
     </div>
 
     <script th:src="@{/script.js}"></script>
+    <script th:src="@{/scriptTasks.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 

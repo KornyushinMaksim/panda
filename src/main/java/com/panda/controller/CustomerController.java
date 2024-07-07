@@ -5,6 +5,7 @@ import com.panda.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -19,8 +20,18 @@ public class CustomerController {
         return customerService.addCustomer(customerDto);
     }
 
+    @GetMapping("/get-all-customers")
+    public List<CustomerDto> getAllCustomers() {
+        return customerService.getAllCustomers();
+    }
+
     @DeleteMapping("/delete-customer")
     public void deleteCustomer(@RequestParam UUID customerId) {
         customerService.deleteCustomer(customerId);
+    }
+
+    @GetMapping("/get-customer-by-id/{id}")
+    public CustomerDto getCustomerById(@RequestParam UUID id) {
+        return customerService.getCustomerById(id);
     }
 }

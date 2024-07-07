@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -42,8 +43,16 @@ public class CustomerService {
         customerRepository.delete(customerDelete);
     }
 
-    public Customer getCustomerById(UUID customerId) {
+    public CustomerDto getCustomerById(UUID customerId) {
 
-        return customerRepository.findById(customerId).orElseThrow();
+        Customer entity = customerRepository.findById(customerId).orElseThrow();
+        return customerMapper.toDto(entity);
+    }
+
+    public List<CustomerDto> getAllCustomers() {
+
+        return customerRepository.findAll().stream()
+                .map(customerMapper::toDto)
+                .toList();
     }
 }

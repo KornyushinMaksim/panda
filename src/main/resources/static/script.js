@@ -1,14 +1,7 @@
 // добавление документа
-function toggleVisibility() {
-    let element = document.getElementById('docAdd');
-    if (element.style.display === 'none') {
-        element.style.display = 'block';
-    } else {
-        element.style.display = 'none';
-    }
-}
-function toggleVisibility1() {
-    let element = document.getElementById('docAdd1');
+function toggleVisibility(id) {
+    let element = document.getElementById(id);
+    console.log(element);
     if (element.style.display === 'none') {
         element.style.display = 'block';
     } else {
@@ -16,51 +9,68 @@ function toggleVisibility1() {
     }
 }
 
-function open() {
-    let el = document.getElementById('docAdd');
-    el.classList.add('open');
-}
-function close() {
-    let el = document.getElementById('docAdd');
-    el.classList.remove('open');
+function cancelMyForm(idForm) {
+    document.getElementById(idForm).reset();
+    window.location.href = "/tasks";
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    fetch('http://localhost:8080/api/v1/tasks/all-tasks')
-        .then(response => response.json())
-        .then(data => {
-            const tasksTableBody = document.getElementById('tasksTableBody');
 
-            data.forEach(task => {
-                const row = document.createElement('tr');
-        
-                // Создаем ссылку для каждой задачи
-                const link = document.createElement('a');
-                link.href = `task?id=${task.id}`; // Перенаправляем на страницу с подробной информацией о задаче
-                link.textContent = task.id;
-        
-                const cellId = document.createElement('td');
-                cellId.appendChild(link);
-                row.appendChild(cellId);
-        
-                // Добавляем остальные данные в ячейки таблицы
-                const cellName = document.createElement('td');
-                cellName.textContent = task.nameTask;
-                row.appendChild(cellName);
-        
-                const cellCustomer = document.createElement('td');
-                cellCustomer.textContent = task.customerId;
-                row.appendChild(cellCustomer);
-        
-                const cellDeadline = document.createElement('td');
-                cellDeadline.textContent = task.deadLine;
-                row.appendChild(cellDeadline);
-        
-                // Добавляем строку в тело таблицы
-                tasksTableBody.appendChild(row);
-            });
-        });
-    });
+// function toggleVisibility1() {
+//     let element = document.getElementById('docAdd1');
+//     if (element.style.display === 'none') {
+//         element.style.display = 'block';
+//     } else {
+//         element.style.display = 'none';
+//     }
+// }
+
+// function open() {
+//     let el = document.getElementById('docAdd');
+//     el.classList.add('open');
+// }
+// function close() {
+//     let el = document.getElementById('docAdd');
+//     el.classList.remove('open');
+// }
+
+// document.addEventListener("DOMContentLoaded", function () {
+//     fetch('http://localhost:8080/api/v1/tasks/all-tasks')
+//         .then(response => response.json())
+//         .then(data => {
+//             const tasksTableBody = document.getElementById('tasksTableBody');
+
+//             data.forEach(task => {
+//                 const row = document.createElement('tr');
+
+//                 // Создаем ссылку для каждой задачи
+//                 const link = document.createElement('a');
+//                 link.href = `task?id=${task.id}`; // Перенаправляем на страницу с подробной информацией о задаче
+//                 link.textContent = task.id;
+
+//                 const cellId = document.createElement('td');
+//                 cellId.appendChild(link);
+//                 row.appendChild(cellId);
+
+//                 // Добавляем остальные данные в ячейки таблицы
+//                 const cellName = document.createElement('td');
+//                 cellName.textContent = task.nameTask;
+//                 row.appendChild(cellName);
+
+//                 const cellCustomer = document.createElement('td');
+//                 cellCustomer.textContent = task.customerId;
+//                 row.appendChild(cellCustomer);
+
+//                 const cellDeadline = document.createElement('td');
+//                 cellDeadline.textContent = task.deadLine;
+//                 row.appendChild(cellDeadline);
+
+//                 // Добавляем строку в тело таблицы
+//                 if (row !== null) {
+//                     tasksTableBody.appendChild(row);
+//                 }
+//             });
+//         });
+// });
 
 
 // // Функция для получения задач и отображения их в таблице
