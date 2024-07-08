@@ -24,13 +24,13 @@ public class FileToDataBaseController {
         fileToDataBaseService.addNewFile(nameFile, response);
     }
 
-    @PostMapping("/upload-file")
+    @PostMapping("/upload-file{employeeId}")
     public void uploadFile(@RequestParam("file") MultipartFile multipartFile,
                            @RequestParam("employeeId") UUID employeeId) {
         fileToDataBaseService.uploadFile(multipartFile, employeeId);
     }
 
-    @GetMapping("/download-file{id}{idEmployee}")
+    @GetMapping("/download-file{id}{employeeId}")
     public void downloadFile(@RequestParam UUID id,
                              @RequestParam UUID employeeId,
                              HttpServletResponse response

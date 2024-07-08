@@ -138,8 +138,7 @@ public class FileToDataBaseService {
      *
      * @param multipartFile
      */
-    public void
-    uploadFile(MultipartFile multipartFile, UUID employeeId) {
+    public void uploadFile(MultipartFile multipartFile, UUID employeeId) {
 
         String path = pathToStorage + "/" + multipartFile.getOriginalFilename();
         String nameMultiPartFile = multipartFile.getOriginalFilename();
@@ -168,7 +167,7 @@ public class FileToDataBaseService {
                     System.out.println("Файл создан"); //заменить на логи, выводить сообщение на фронт
 
                 } else {
-                    if (fileToDB.getIsActive() ) {
+                    if (fileToDB.getIsActive() && fileToDB.getEmployee().getId().equals(employeeId)) {
 
                         writeToFile(path, multipartFile);
                         fileToDB.setDateOfChange(LocalDate.now());
