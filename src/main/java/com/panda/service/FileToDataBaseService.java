@@ -1,8 +1,10 @@
 package com.panda.service;
 
+import com.panda.dto.EmployeeDto;
 import com.panda.dto.FileToDataBaseDto;
 import com.panda.mapper.EmployeeMapper;
 import com.panda.mapper.FileToDataBaseMapper;
+import com.panda.model.Employee;
 import com.panda.model.FileToDataBase;
 import com.panda.repository.FileToDataBaseRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -77,10 +79,12 @@ public class FileToDataBaseService {
      * @param id
      */
     @Transactional
-    public void downloadFile(UUID id, HttpServletResponse response) {
+    public void downloadFile(UUID id, UUID employeeId, HttpServletResponse response) {
 
 //        FileToDataBaseDto fileToDataBaseDto = getFileById(id);
         FileToDataBase fileToDataBase = fileToDataBaseRepository.findById(id).orElseThrow();
+        EmployeeDto dto = employeeService.getEmployeeById(employeeId);
+        Employee entity = employeeMapper.toEntity(dto);
 
         String filePath = fileToDataBase.getPathToStorage();
         String nameFileTypeFile = fileToDataBase.getNameFile();
@@ -93,6 +97,7 @@ public class FileToDataBaseService {
             out.write(encodedFile);
 
             fileToDataBase.setIsActive(true);
+            fileToDataBase.setEmployee(entity);
 
             fileToDataBaseRepository.save(fileToDataBase);
         } catch (IOException e) {

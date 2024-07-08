@@ -27,4 +27,6 @@ public class FileToDataBaseDto {
     private String pathToStorage;
 
     private boolean isActive;
+
+    private EmployeeDto employee;
 }

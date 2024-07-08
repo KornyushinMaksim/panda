@@ -30,12 +30,13 @@ public class FileToDataBaseController {
         fileToDataBaseService.uploadFile(multipartFile, employeeId);
     }
 
-    @GetMapping("/download-file/{id}")
-    public void downloadFile(@PathVariable UUID id,
+    @GetMapping("/download-file{id}{idEmployee}")
+    public void downloadFile(@RequestParam UUID id,
+                             @RequestParam UUID employeeId,
                              HttpServletResponse response
     ) {
         System.out.println(id);
-        fileToDataBaseService.downloadFile(id, response);
+        fileToDataBaseService.downloadFile(id, employeeId, response);
     }
 
     @GetMapping("/get-file-by-id")
