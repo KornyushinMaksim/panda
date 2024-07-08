@@ -71,7 +71,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/", "/lo", "/static/**", "/currents/**").permitAll()
-                        .requestMatchers("/admin", "/tasksAdmin").hasRole("ADM")
+                        .requestMatchers("/admin", "/employees", "/employee-details").hasRole("ADM")
                         .requestMatchers("/tasks/**", "/files/**").hasAnyRole("ADM", "USR")
                         .anyRequest().authenticated()
                 )

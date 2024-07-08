@@ -101,8 +101,8 @@ select {
 }
 
 table {
-    max-width: 95%;
-    margin: 20px auto;
+    width: 95%;
+    margin: 20px;
     border-collapse: collapse;
 }
 
@@ -164,7 +164,7 @@ p {
 .commit {
     margin: 1em;
     text-align: start;
-    border-top: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
 .commitBtn {
@@ -182,7 +182,7 @@ p {
     top: 0;
     height: 100%;
     width: 100%;
-    background-color: #333333;
+    background-color: #d8d8d8;
     color: #fff;
     padding-top: 20px;
 }
@@ -195,11 +195,11 @@ p {
 
 .side-menu, u, l {
     padding: 10px 15px;
-    border-bottom: 1px solid #555;
+    border-bottom: 1px solid #d8d8d8;
 }
 
 .side-menu, u, l:hover {
-    background-color: #555;
+    background-color: #d8d8d8;
 }
 
 .side-menu, u, l {

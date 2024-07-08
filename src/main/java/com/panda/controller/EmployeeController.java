@@ -20,14 +20,13 @@ public class EmployeeController {
         return employeeService.getAllEmployees();
     }
 
-    @GetMapping("/get-employee-by-id{id}")
-    public EmployeeDto getEmployeeById(@RequestParam UUID id) {
+    @GetMapping("/get-employee-by-id/{id}")
+    public EmployeeDto getEmployeeById(@PathVariable UUID id) {
         return employeeService.getEmployeeById(id);
     }
 
     @PutMapping("/update-employee")
     public EmployeeDto updateEmployee(@RequestBody EmployeeDto employeeDto) {
-//        System.out.println(new Department().getEmployees());
         return employeeService.updateEmployee(employeeDto);
     }
 

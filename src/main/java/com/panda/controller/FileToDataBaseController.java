@@ -34,6 +34,7 @@ public class FileToDataBaseController {
     public void downloadFile(@PathVariable UUID id,
                              HttpServletResponse response
     ) {
+        System.out.println(id);
         fileToDataBaseService.downloadFile(id, response);
     }
 

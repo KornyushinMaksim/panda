@@ -25,4 +25,6 @@ public class FileToDataBaseDto {
     private LocalDate dateOfChange;
 
     private String pathToStorage;
+
+    private boolean isActive;
 }
