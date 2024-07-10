@@ -42,12 +42,14 @@ label {
     background-repeat: no-repeat;
 }
 
-.headerMenu,
-.headerProfile,
-.search-profile {
+#headerMenu,
+.headerProfile
+/* .search-profile  */
+{
+    width: 100%;
     display: flex;
     justify-content: space-around;
-    align-items: center;
+    /* align-items: center; */
 }
 
 .headerMenu div {

@@ -11,28 +11,47 @@ function toggleVisibility(id) {
 
 function cancelMyForm(idForm) {
     document.getElementById(idForm).reset();
-    window.location.href = "/tasks";
+    window.location.href = "/tasks";    
 }
 
 //Проверка роли
 function checkRole(dataempl) {
     const role = dataempl.role;
     console.log(role);
+
     if (role === 'ROLE_ADM') {
-        console.log('проверка роли');
-        const header = document.getElementById('admHead');
+        console.log('проверка роли администратор');
+        const header = document.getElementById('headerMenu');
         console.log(header);
         header.innerHTML = `
-            <div class="side-menu">
-                <div class="u">
-                    <div class="l"><a href="/tasks">Домой?</a></div>
-                    <div class="l"><a href="/tasks">Задачи?</a></div>
-                    <div class="l"><a href="/employees">Сотрудники</a></div>
-                    <div class="l"><a href="#">Portfolio</a></div>
-                    <div class="l"><a href="#">Contact</a></div>
-                </div>
-            </div>
+                    <div><a href="/tasks">Список задач</a></div>
+                    <div><a href="/my-tasks">Мои задачи</a></div>
+                    <div><a href="/employees">Сотрудники</a></div>
+                    <div><a href="#">Заказчики</a></div>
+                    <div><a href="#">something</a></div>
             `;
+
+    } else if (role === 'ROLE_MGR') {
+        console.log('проверка роли менеджер');
+        const header = document.getElementById('headerMenu');
+        console.log(header);
+        header.innerHTML = `
+                    <div><a href="#">Договора</a></div>
+                    <div><a href="#">Заказчики</a></div>
+                    <div><a href="#">Соискатели</a></div>
+                    <div><a href="#">Сотрудники</a></div>
+            `;
+
+    } else if (role === 'ROLE_USR') {
+        console.log('проверка роли пользователя');
+        const header = document.getElementById('headerMenu');
+        console.log(header);
+        header.innerHTML = `
+                    <div><a href="/tasks">Список задач</a></div>
+                    <div><a href="/my-tasks">Мои задачи</a></div>
+                    <div><a href="/employees">Сотрудники</a></div>
+            `;
+
     }
 }
 

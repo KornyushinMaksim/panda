@@ -140,7 +140,7 @@ public class FileToDataBaseService {
      */
     public void uploadFile(MultipartFile multipartFile, UUID employeeId) {
 
-        String path = pathToStorage + "/" + multipartFile.getOriginalFilename();
+        String path = pathToStorage + File.separator + multipartFile.getOriginalFilename();
         String nameMultiPartFile = multipartFile.getOriginalFilename();
         FileToDataBase fileToDB = getFileToDataBaseByName(nameMultiPartFile);
 

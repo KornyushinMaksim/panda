@@ -12,14 +12,8 @@ import java.util.UUID;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, UUID> {
 
-//    @Query("""
-//            FROM employees e JOIN FETCH
-//                        (FROM authentications a WHERE a.login = :username)
-//                        WHERE e.employee_id = a.employee_id
-//            """)
     Optional<Employee> findEmployeeByAuthenticationLogin(String login);
 
-//    @Query("FROM Employees e JOIN FETCH e.role WHERE e.name = :name")
     Optional<Employee> findByName(String name);
 
 }

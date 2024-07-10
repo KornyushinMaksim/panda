@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -54,6 +55,13 @@ public class Employee {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
+
+//    @ManyToMany
+//    @JoinTable(name = "file_employee_relation",
+//            joinColumns = @JoinColumn(name = "employee_id"),
+//            inverseJoinColumns = @JoinColumn(name = "file_task_id"))
+//    private Set<FileTask> tasks;
+
 
 //    private Boolean access;//доступ
 
